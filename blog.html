@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Blog</title>
+  <!-- Reference Firebase initialization script -->
+  <script src="firebase-init.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      font-weight: bold;
+    }
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<form id="blogForm">
+  <label for="username">Username:</label>
+  <input type="text" id="username" value="" readonly>
+  <label for="post">Post:</label>
+  <textarea id="post" rows="5"></textarea>
+  <input type="submit" value="Post" onclick="submitPost()">
+</form>
+
+<!-- Firebase Auth Script -->
+<script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js"></script>
+<script>
+  // Your Firebase initialization code will be included from firebase-init.js
+  // Make sure firebase-init.js is included before this script
+  // Function to get the currently signed-in user's display name
+  function getCurrentUserDisplayName() {
+    var user = firebase.auth().currentUser;
+    if (user) {
+      return user.displayName;
+    } else {
+      return "Anonymous";
+    }
+  }
+
+  // Function to submit a new blog post
+  function submitPost() {
+    var username = getCurrentUserDisplayName();
+    var post = document.getElementById("post").value;
+    var date = new Date().toLocaleDateString(); // Get current date
+
+    // Here you can add code to save the post to your database or perform any other action
+    // For example, you can use Firebase Firestore to store the post data
+    // Replace this with your actual database interaction code
+
+    alert("Post submitted successfully!");
+    document.getElementById("blogForm").reset(); // Reset form fields after submission
+  }
+
+  // Set the username field value when the page loads
+  document.getElementById("username").value = getCurrentUserDisplayName();
+</script>
+
+</body>
+</html>
