@@ -1,48 +1,63 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up</title>
-  <!-- Include Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.6/firebaseui.js"></script>
-
   <script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js"></script>
-  <!-- Include Firebase initialization script -->
-  <script src="firebase-init.js"></script>
   <script>
-    // Function to handle form submission
-    function signUp() {
-      var email = document.getElementById('email').value;
-      var password = document.getElementById('password').value;
-
-      // Create user with email and password
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // User signed up successfully
-          var user = userCredential.user;
-          console.log('User signed up:', user);
-          alert('Sign up successful!');
-          // Redirect to another page or perform any other action
-        })
-        .catch((error) => {
-          // Error occurred during sign up
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.error('Sign up error:', errorMessage);
-          alert('Sign up failed: ' + errorMessage);
-        });
-    }
+    const firebaseConfig = {
+      // Replace with your actual Firebase project configuration
+      apiKey: "AIzaSyBpZfPitBi12rkyzfyV1-scSvCc32jFAWE",
+  authDomain: "science-ki-duniya.firebaseapp.com",
+  databaseURL: "https://science-ki-duniya-default-rtdb.firebaseio.com",
+  projectId: "science-ki-duniya",
+  storageBucket: "science-ki-duniya.appspot.com",
+  messagingSenderId: "271115609150",
+  appId: "1:271115609150:web:a0dfc810aee52a978cdd6f",
+  measurementId: "G-KBHX5S9PX5"
+};"
+    };
+    firebase.initializeApp(firebaseConfig);
   </script>
 </head>
 <body>
 
-<form>
+<form id="signup-form">
   <input type="email" id="email" placeholder="Email" required><br>
   <input type="password" id="password" placeholder="Password" required><br>
-  <button type="button" onclick="signUp()">Sign Up</button>
+  <button type="submit">Sign Up</button>
 </form>
+
+<script>
+  // Function to handle form submission
+  document.getElementById('signup-form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent default form submission
+
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // User signed up successfully
+        var user = userCredential.user;
+        console.log('User signed up:', user);
+        alert('Sign up successful!');
+        // Redirect to another page or perform any other action
+      })
+      .catch((error) => {
+        // Error occurred during sign up
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.error('Sign up error:', errorMessage);
+        alert('Sign up failed: ' + errorMe
+ssage);
+      });
+  });
+</script>
 
 </body>
 </html>
