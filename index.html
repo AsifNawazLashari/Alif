@@ -26,7 +26,8 @@
           // Signed up successfully
           var user = userCredential.user;
           alert("Sign up successful! Welcome, " + fullName);
-          // Redirect to another page if needed
+          // Redirect to another page
+          window.location.href = "blog.html"; // Change "second-page.html" to the URL of the desired page
         })
         .catch((error) => {
           // Handle errors
