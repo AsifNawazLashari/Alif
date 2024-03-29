@@ -18,10 +18,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
 document.addEventListener('DOMContentLoaded', function() {
   // FirebaseUI configuration
   var uiConfig = {
-    signInSuccessUrl: '<blog.html>',
+    signInSuccessUrl: 'https://asifnawazlashari.github.io/Alif/blog.html', // Corrected the URL format
     signInOptions: [
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
