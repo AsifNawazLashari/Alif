@@ -3,112 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up</title>
-  <!-- Add Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js"></script>
-
-  <!-- Add FirebaseUI -->
-  <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css" />
-
-  <!-- Your Firebase configuration -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
-      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
-      projectId: "asifnawazlashari-85eff",
-      storageBucket: "asifnawazlashari-85eff.appspot.com",
-      messagingSenderId: "436734491671",
-      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
-      measurementId: "G-40RZ2LQPZN"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth();
-  </script>
-
+  <title>Signup</title>
   <style>
-    /* Add your custom styles here */
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
     }
-    .container {
-      max-width: 400px;
-      margin: 100px auto;
+    form {
+      background-color: #fff;
       padding: 20px;
-      background-color: #f9f9f9;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    .title {
-      text-align: center;
-      margin-bottom: 20px;
+    label, input {
+      display: block;
+      margin-bottom: 10px;
     }
-    .input-field {
-      width: 100%;
+    input {
+      width: calc(100% - 22px);
       padding: 10px;
-      margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
+      border-radius: 5px;
     }
-    .submit-btn {
+    button {
       width: 100%;
       padding: 10px;
       background-color: #007bff;
       color: #fff;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 16px;
     }
-    .submit-btn:hover {
+    button:hover {
       background-color: #0056b3;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-  <div class="container">
-    <h2 class="title">Sign Up</h2>
-    <form id="signup-form">
-      <input type="text" class="input-field" id="full-name" placeholder="Full Name" required>
-      <input type="text" class="input-field" id="username" placeholder="Username" required>
-      <input type="email" class="input-field" id="email" placeholder="Email" required>
-      <input type="password" class="input-field" id="password" placeholder="Password" required>
-      <input type="password" class="input-field" id="confirm-password" placeholder="Confirm Password" required>
-      <button type="submit" class="submit-btn">Sign Up</button>
-    </form>
-  </div>
+  <h2>Signup</h2>
+  <form id="signup-form">
+    <label for="email">Email:</label>
+    <input type="email" id="email" required>
+    <label for="password">Password:</label>
+    <input type="password" id="password" required>
+    <button type="submit">Signup</button>
+  </form>
 
-  <!-- Initialize FirebaseUI Auth -->
-  <script type="module">
-    // FirebaseUI configuration
-    var uiConfig = {
-      signInSuccessUrl: 'https://asifnawazlashari.github.io/Alif/login.html',
-      signInOptions: [
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        firebase.auth.AnonymousAuthProvider.PROVIDER_ID // Add this line to include anonymous sign-in option
-      ],
-      // Other configuration options as needed
-    };
+  <script>
+    const supabaseUrl = 'https://uymohtxakjtqlpvgxckg.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5bW9odHhha2p0cWxwdmd4Y2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTE3Mzk4OTgsImV4cCI6MjAyNzMxNTg5OH0.OqNq1Ai0OLLs_8x_pUijvqlUIny4wrQGW80puOQJHGY';
 
-    // Initialize the FirebaseUI Auth widget
-    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Start the FirebaseUI Auth flow
-    ui.start('#firebaseui-auth-container', uiConfig);
+    document.getElementById('signup-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const { user, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        if (error) {
+          alert('Signup failed: ' + error.message);
+        } else {
+          alert('Signup successful!');
+          window.location.href = 'login.html'; // Redirect to login page after successful signup
+        }
+      } catch (error) {
+        console.error('Signup error:', error.message);
+        alert('Signup failed: ' + error.message);
+      }
+    });
   </script>
 </body>
 </html>
