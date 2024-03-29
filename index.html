@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Sign Up</title>
   <!-- Add Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js"></script>
@@ -54,23 +54,47 @@
       text-align: center;
       margin-bottom: 20px;
     }
-    #firebaseui-auth-container {
-      margin-top: 20px;
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .submit-btn:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2 class="title">Login</h2>
-    <!-- Container for FirebaseUI Auth UI -->
-    <div id="firebaseui-auth-container"></div>
+    <h2 class="title">Sign Up</h2>
+    <form id="signup-form">
+      <input type="text" class="input-field" id="full-name" placeholder="Full Name" required>
+      <input type="text" class="input-field" id="username" placeholder="Username" required>
+      <input type="email" class="input-field" id="email" placeholder="Email" required>
+      <input type="password" class="input-field" id="password" placeholder="Password" required>
+      <input type="password" class="input-field" id="confirm-password" placeholder="Confirm Password" required>
+      <button type="submit" class="submit-btn">Sign Up</button>
+    </form>
   </div>
 
   <!-- Initialize FirebaseUI Auth -->
   <script type="module">
     // FirebaseUI configuration
     var uiConfig = {
-      signInSuccessUrl: 'URL_TO_REDIRECT_AFTER_SIGN_IN',
+      signInSuccessUrl: 'blog.html',
       signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
