@@ -4,83 +4,97 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <!-- Add Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js"></script>
-
-  <!-- Your Firebase configuration -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
-      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
-      projectId: "asifnawazlashari-85eff",
-      storageBucket: "asifnawazlashari-85eff.appspot.com",
-      messagingSenderId: "436734491671",
-      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
-      measurementId: "G-40RZ2LQPZN"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth();
-  </script>
-
   <style>
-    /* Add your custom styles here */
     body {
       font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .container {
-      max-width: 400px;
-      margin: 100px auto;
-      padding: 20px;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .title {
+      background-color: #f0f0f0;
+      border-radius: 20px;
+      box-shadow: 6px 6px 12px #bebebe, 
+                  -6px -6px 12px #ffffff;
+      padding: 40px;
+      width: 300px;
       text-align: center;
+    }
+    h2 {
       margin-bottom: 20px;
     }
-    .input-field {
+    input[type="email"],
+    input[type="password"] {
       width: 100%;
       padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    .submit-btn {
-      width: 100%;
-      padding: 10px;
-      background-color: #007bff;
-      color: #fff;
+      margin: 10px 0;
       border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      box-shadow: inset 4px 4px 8px #bebebe, 
+                  inset -4px -4px 8px #ffffff;
     }
-    .submit-btn:hover {
-      background-color: #0056b3;
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 3px 3px 6px #bebebe, 
+                  -3px -3px 6px #ffffff;
+    }
+    button:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2 class="title">Login</h2>
-    <form id="login-form">
-      <input type="email" class="input-field" id="email" placeholder="Email" required>
-      <input type="password" class="input-field" id="password" placeholder="Password" required>
-      <button type="submit" class="submit-btn">Login</button>
+    <h2>Login</h2>
+    <form id="login-form" action="/login" method="post">
+      <input type="email" id="email" name="email" placeholder="Email" required>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
     </form>
+    <p>Don't have an account? <a href="/signup">Sign Up</a></p>
   </div>
+
+  <!-- Auth0 SDK -->
+  <script src="https://cdn.auth0.com/js/auth0/9.18/auth0.min.js"></script>
+  <script>
+    var auth0 = new auth0.WebAuth({
+      domain: 'dev-xdoj71uz4c3eiywe.us.auth0.com',
+      clientID: 'HW8ylHKXKUD91puBdFPXXbnmMFjRqjDr',
+      redirectUri: window.location.href, // Change if you have a different redirect URL after login
+      responseType: 'token id_token',
+      scope: 'openid email profile'
+    });
+
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+
+      auth0.login({
+        realm: 'Username-Password-Authentication',
+        username: email,
+        password: password
+      }, function(err) {
+        if (err) {
+          console.error('Error logging in:', err);
+          alert('Error logging in: ' + err.description);
+        } else {
+          // Redirect to the desired page after successful login
+          window.location.href = '/dashboard';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
