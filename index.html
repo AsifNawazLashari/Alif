@@ -20,14 +20,18 @@
       appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
       measurementId: "G-40RZ2LQPZN"
     };
+    
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-
+    
+    // Access Firebase Auth service
+    var auth = firebase.auth();
+    
     function signUp() {
       var email = document.getElementById('email').value;
       var password = document.getElementById('password').value;
-
-      firebase.auth().createUserWithEmailAndPassword(email, password)
+    
+      auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Signed up successfully
           alert("Sign up successful!");
@@ -56,5 +60,4 @@
 
 
 
-      
-
+    
