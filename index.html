@@ -4,60 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up</title>
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js"></script>
-  <script>
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    var firebaseConfig = {
-      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
-      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
-      projectId: "asifnawazlashari-85eff",
-      storageBucket: "asifnawazlashari-85eff.appspot.com",
-      messagingSenderId: "436734491671",
-      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
-      measurementId: "G-40RZ2LQPZN"
-    };
-    
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    
-    // Access Firebase Auth service
-    var auth = firebase.auth();
-    
-    function signUp() {
-      var email = document.getElementById('email').value;
-      var password = document.getElementById('password').value;
-    
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed up successfully
-          alert("Sign up successful!");
-          window.location.href = "login.html"; // Redirect to login page
-        })
-        .catch((error) => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          alert(errorMessage);
-        });
-    }
-  </script>
 </head>
 <body>
-  <div style="max-width: 400px; margin: 100px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-    <h2 style="margin-bottom: 20px; text-align: center;">Sign Up</h2>
-    <form>
-      <input type="email" id="email" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-      <input type="password" id="password" placeholder="Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-      <button type="button" onclick="signUp()" style="width: 100%; padding: 10px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Sign Up</button>
-    </form>
-  </div>
+  <h2>Sign Up</h2>
+  <form id="signup-form" action="/signup" method="post">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password" required><br>
+    <button type="submit">Sign Up</button>
+  </form>
 
-  <!-- Check console for any errors -->
+  <!-- Auth0 SDK -->
+  <script src="https://cdn.auth0.com/js/auth0/9.18/auth0.min.js"></script>
   <script>
-    window.onerror = function(message, source, lineno, colno, error) {
-      console.error("Error:", message, "Source:", source, "Line:", lineno, "Column:", colno, "Error object:", error);
-    };
+    var auth0 = new auth0.WebAuth({
+      domain: 'dev-xdoj71uz4c3eiywe.us.auth0.com',
+      clientID: 'HW8ylHKXKUD91puBdFPXXbnmMFjRqjDr',
+      redirectUri: window.location.href, // Change if you have a different redirect URL after signup
+      responseType: 'token id_token',
+      scope: 'openid email profile'
+    });
+
+    document.getElementById('signup-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+
+      auth0.signup({
+        connection: 'Username-Password-Authentication', // Change to the name of your Auth0 connection
+        email: email,
+        password: password
+      }, function(err) {
+        if (err) {
+          console.error('Error signing up:', err);
+          alert('Error signing up: ' + err.description);
+        } else {
+          alert('Sign up successful! Please log in.');
+          window.location.href = '/login'; // Redirect to login page
+        }
+      });
+    });
   </script>
 </body>
 </html>
