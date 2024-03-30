@@ -87,11 +87,11 @@
         password: password
       }, function(err) {
         if (err) {
-          console.error('Error signing up:', err);
+          console.error('Error signing up or email already registered!:', err);
           alert('Error signing up: ' + err.description);
         } else {
           alert('Sign up successful! Please log in.');
-          window.location.href = '/login';
+          window.location.href = '/login.html';
         }
       });
     });
