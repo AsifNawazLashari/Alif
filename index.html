@@ -85,44 +85,42 @@
     const analytics = getAnalytics(app);
 
     // Sign up functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const signupForm = document.getElementById('signup-form');
+document.addEventListener('DOMContentLoaded', function() {
+  const signupForm = document.getElementById('signup-form');
 
-      signupForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+  signupForm.addEventListener('submit', function(event) {
+    event.preventDefault();
 
-        const fullname = document.getElementById('fullname').value;
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+    const fullname = document.getElementById('fullname').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
 
-        if (password !== confirmPassword) {
-          alert("Passwords do not match");
-          return;
-        }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
-        createUserWithEmailAndPassword(app.auth(), email, password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            user.updateProfile({
-              displayName: fullname,
-              username: username
-            })
-            .then(() => {
-              alert("Sign up successful!");
-              window.location.href = "login.html";
-            })
-            .catch((error) => {
-              console.error("Error updating profile: ", error);
-            });
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert(errorMessage);
-            console.error("Error creating user: ", errorCode);
-          });
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        user.updateProfile({
+          displayName: fullname
+        })
+        .then(() => {
+          alert("Sign up successful!");
+          window.location.href = "login.html";
+        })
+        .catch((error) => {
+          console.error("Error updating profile: ", error);
+        });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorMessage);
+        console.error("Error creating user: ", errorCode);
+      });
       });
     });
   </script>
