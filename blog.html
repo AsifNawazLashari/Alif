@@ -3,14 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-time Blog Posting</title>
+    <title>Post Page</title>
 </head>
 <body>
-    <h1>Real-time Blog Posting</h1>
-    <textarea id="postContent" placeholder="Enter your blog post here"></textarea>
-    <button onclick="submitPost()">Submit Post</button>
-
-    <div id="posts"></div>
+    <h1>Post Page</h1>
+    
+    <!-- Form for posting new content -->
+    <form id="postForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" required><br><br>
+        
+        <label for="postContent">Post:</label><br>
+        <textarea id="postContent" required></textarea><br><br>
+        
+        <button type="submit">Submit Post</button>
+    </form>
+    
+    <!-- Container for displaying posts -->
+    <div id="postsContainer">
+        <h2>Recent Posts</h2>
+        <ul id="postsList"></ul>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
@@ -19,40 +32,67 @@
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function submitPost() {
+        // Function to handle form submission for posting new content
+        async function submitPost(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Get values from form fields
+            const username = document.getElementById('username').value;
             const postContent = document.getElementById('postContent').value;
 
             try {
+                // Insert new post into the database
                 const { data, error } = await supabase
                     .from('posts')
-                    .insert([{ content: postContent }]);
-
+                    .insert([{ username, post: postContent }]);
+                
                 if (error) {
                     console.error('Error submitting post:', error.message);
                 } else {
                     console.log('Post submitted successfully:', data);
+                    // Clear form fields after successful submission
+                    document.getElementById('username').value = '';
+                    document.getElementById('postContent').value = '';
+                    // Refresh posts list to display the new post
+                    fetchAndDisplayPosts();
                 }
             } catch (error) {
                 console.error('Error submitting post:', error.message);
             }
         }
 
-        const postsDiv = document.getElementById('posts');
+        // Function to fetch and display posts from the database
+        async function fetchAndDisplayPosts() {
+            try {
+                const { data, error } = await supabase
+                    .from('posts')
+                    .select('*');
 
-        const subscription = supabase
-            .from('posts')
-            .on('INSERT', payload => {
-                const newPost = payload.new;
-                const postElement = document.createElement('div');
-                postElement.textContent = newPost.content;
-                postsDiv.prepend(postElement);
-            })
-            .subscribe();
+                if (error) {
+                    console.error('Error fetching posts:', error.message);
+                } else {
+                    // Clear existing posts list
+                    const postsList = document.getElementById('postsList');
+                    postsList.innerHTML = '';
 
-        // Clean up the subscription when the page unloads
-        window.addEventListener('beforeunload', () => {
-            subscription.unsubscribe();
-        });
+                    // Display fetched posts
+                    data.forEach(post => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${post.username} (${post.timestamp}): ${post.post}`;
+                        postsList.appendChild(listItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching posts:', error.message);
+            }
+        }
+
+        // Event listener for form submission
+        const postForm = document.getElementById('postForm');
+        postForm.addEventListener('submit', submitPost);
+
+        // Fetch and display posts when the page loads
+        fetchAndDisplayPosts();
     </script>
 </body>
 </html>
