@@ -1,98 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Posting Website</title>
 </head>
 <body>
-    <h1>Post Page</h1>
-    
-    <!-- Form for posting new content -->
-    <form id="postForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" required><br><br>
-        
-        <label for="postContent">Post:</label><br>
-        <textarea id="postContent" required></textarea><br><br>
-        
-        <button type="submit">Submit Post</button>
-    </form>
-    
-    <!-- Container for displaying posts -->
-    <div id="postsContainer">
-        <h2>Recent Posts</h2>
-        <ul id="postsList"></ul>
-    </div>
+  <h1>Blog Posting Website</h1>
+  
+  <!-- Form for posting -->
+  <form id="postForm">
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" required><br>
+    <label for="postContent">Post:</label><br>
+    <textarea id="postContent" name="postContent" required></textarea><br>
+    <button type="submit">Post</button>
+  </form>
+  
+  <!-- Container for displaying posts -->
+  <div id="postContainer"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script>
-        const SUPABASE_URL = 'https://uymohtxakjtqlpvgxckg.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5bW9odHhha2p0cWxwdmd4Y2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTE3Mzk4OTgsImV4cCI6MjAyNzMxNTg5OH0.OqNq1Ai0OLLs_8x_pUijvqlUIny4wrQGW80puOQJHGY';
+  <!-- Import Supabase library using UMD format -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <script>
+    // Initialize Supabase client
+    const { createClient } = supabase
+    const supabaseUrl = 'https://uymohtxakjtqlpvgxckg.supabase.co'
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5bW9odHhha2p0cWxwdmd4Y2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTE3Mzk4OTgsImV4cCI6MjAyNzMxNTg5OH0.OqNq1Ai0OLLs_8x_pUijvqlUIny4wrQGW80puOQJHGY'
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    // Function to submit a new post
+    const submitPost = async (event) => {
+      event.preventDefault();
 
-        // Function to handle form submission for posting new content
-        async function submitPost(event) {
-            event.preventDefault(); // Prevent default form submission
-            
-            // Get values from form fields
-            const username = document.getElementById('username').value;
-            const postContent = document.getElementById('postContent').value;
+      const formData = new FormData(event.target);
+      const username = formData.get('username');
+      const postContent = formData.get('postContent');
 
-            try {
-                // Insert new post into the database
-                const { data, error } = await supabase
-                    .from('posts')
-                    .insert([{ username, post: postContent }]);
-                
-                if (error) {
-                    console.error('Error submitting post:', error.message);
-                } else {
-                    console.log('Post submitted successfully:', data);
-                    // Clear form fields after successful submission
-                    document.getElementById('username').value = '';
-                    document.getElementById('postContent').value = '';
-                    // Refresh posts list to display the new post
-                    fetchAndDisplayPosts();
-                }
-            } catch (error) {
-                console.error('Error submitting post:', error.message);
-            }
-        }
+      // Insert post into Supabase database
+      const { data, error } = await supabase
+        .from('posts')
+        .insert([{ username, postContent }]);
 
-        // Function to fetch and display posts from the database
-        async function fetchAndDisplayPosts() {
-            try {
-                const { data, error } = await supabase
-                    .from('posts')
-                    .select('*');
+      if (error) {
+        console.error('Error inserting post:', error.message);
+      } else {
+        console.log('Post inserted successfully:', data);
+        // Clear form fields after successful submission
+        event.target.reset();
+        // Refresh posts
+        fetchPosts();
+      }
+    };
 
-                if (error) {
-                    console.error('Error fetching posts:', error.message);
-                } else {
-                    // Clear existing posts list
-                    const postsList = document.getElementById('postsList');
-                    postsList.innerHTML = '';
+    // Function to fetch and display posts
+    const fetchPosts = async () => {
+      const { data, error } = await supabase.from('posts').select();
 
-                    // Display fetched posts
-                    data.forEach(post => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `${post.username} (${post.timestamp}): ${post.post}`;
-                        postsList.appendChild(listItem);
-                    });
-                }
-            } catch (error) {
-                console.error('Error fetching posts:', error.message);
-            }
-        }
+      if (error) {
+        console.error('Error fetching posts:', error.message);
+      } else {
+        const postContainer = document.getElementById('postContainer');
+        postContainer.innerHTML = ''; // Clear previous posts
 
-        // Event listener for form submission
-        const postForm = document.getElementById('postForm');
-        postForm.addEventListener('submit', submitPost);
+        data.forEach(post => {
+          const postElement = document.createElement('div');
+          postElement.innerHTML = `
+            <h3>${post.username}</h3>
+            <p>${post.postContent}</p>
+            <hr>
+          `;
+          postContainer.appendChild(postElement);
+        });
+      }
+    };
 
-        // Fetch and display posts when the page loads
-        fetchAndDisplayPosts();
-    </script>
+    // Event listener for form submission
+    document.getElementById('postForm').addEventListener('submit', submitPost);
+
+    // Initial fetch of posts
+    fetchPosts();
+  </script>
 </body>
 </html>
