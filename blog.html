@@ -19,23 +19,27 @@
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        function submitPost() {
+        async function submitPost() {
             const postContent = document.getElementById('postContent').value;
 
-            supabase
-                .from('posts')
-                .insert([{ content: postContent }])
-                .then(() => {
-                    console.log('Post submitted successfully');
-                })
-                .catch(error => {
-                    console.error('Error submitting post:', error);
-                });
+            try {
+                const { data, error } = await supabase
+                    .from('posts')
+                    .insert([{ content: postContent }]);
+
+                if (error) {
+                    console.error('Error submitting post:', error.message);
+                } else {
+                    console.log('Post submitted successfully:', data);
+                }
+            } catch (error) {
+                console.error('Error submitting post:', error.message);
+            }
         }
 
         const postsDiv = document.getElementById('posts');
 
-        supabase
+        const subscription = supabase
             .from('posts')
             .on('INSERT', payload => {
                 const newPost = payload.new;
@@ -44,6 +48,11 @@
                 postsDiv.prepend(postElement);
             })
             .subscribe();
+
+        // Clean up the subscription when the page unloads
+        window.addEventListener('beforeunload', () => {
+            subscription.unsubscribe();
+        });
     </script>
 </body>
 </html>
