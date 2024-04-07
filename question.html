@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask a Question</title>
+  <!-- Include Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+  <script>
+    // Initialize Firebase
+    var firebaseConfig = {
+      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
+      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
+      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
+      projectId: "asifnawazlashari-85eff",
+      storageBucket: "asifnawazlashari-85eff.appspot.com",
+      messagingSenderId: "436734491671",
+      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
+      measurementId: "G-40RZ2LQPZN"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to the Firebase database
+    var database = firebase.database();
+
+    // Function to handle form submission
+    function submitQuestion(event) {
+      event.preventDefault(); // Prevent default form submission
+      var questionTitle = document.getElementById('questionTitle').value; // Get question title from input field
+      var questionContent = document.getElementById('questionContent').value; // Get question content from input field
+
+      // Save question to Firebase database
+      var newQuestionRef = database.ref('questions').push(); // Create a new question reference
+      newQuestionRef.set({
+        title: questionTitle,
+        content: questionContent,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }).then(function() {
+        alert('Question posted successfully!');
+        // Reset form fields after successful submission
+        document.getElementById('questionForm').reset();
+      }).catch(function(error) {
+        console.error('Error posting question:', error);
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>Ask a Question</h1>
+  <!-- Question form -->
+  <form id="questionForm" onsubmit="submitQuestion(event)">
+    <label for="questionTitle">Question Title:</label><br>
+    <input type="text" id="questionTitle" name="questionTitle" required><br>
+    <label for="questionContent">Question Content:</label><br>
+    <textarea id="questionContent" name="questionContent" rows="4" cols="50" required></textarea><br>
+    <button type="submit">Post Question</button>
+  </form>
+</body>
+</html>
