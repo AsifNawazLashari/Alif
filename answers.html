@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submit Answer</title>
+  <title>Answer Submission</title>
   <style>
     /* Add your CSS styling here */
     body {
@@ -20,38 +20,6 @@
     }
     .answer-form {
       margin-bottom: 20px;
-    }
-    .answer-list {
-      list-style-type: none;
-      padding: 0;
-    }
-    .answer {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    .answer:hover {
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-    .answer-content {
-      margin-bottom: 10px;
-    }
-    .answer-actions {
-      display: flex;
-      justify-content: space-between;
-    }
-    .vote-btn {
-      cursor: pointer;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 5px 10px;
-    }
-    .vote-btn:hover {
-      background-color: #0056b3;
     }
   </style>
 </head>
@@ -70,12 +38,6 @@
         <button type="submit">Submit Answer</button>
       </form>
     </div>
-
-    <!-- Answer List -->
-    <h3>Answers</h3>
-    <ul class="answer-list" id="answerList">
-      <!-- Answers will be dynamically populated here -->
-    </ul>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
@@ -97,14 +59,34 @@
     // Reference to the Firebase database
     var database = firebase.database();
 
+    // Function to load question details from Firebase database
+    function loadQuestionDetails() {
+      // Get question ID from URL query parameter
+      var params = new URLSearchParams(window.location.search);
+      var questionId = params.get('questionId');
+
+      // Get question details from database
+      var questionRef = database.ref('questions/' + questionId);
+      questionRef.once('value', function(snapshot) {
+        var question = snapshot.val();
+        // Set question details on the page
+        document.getElementById('questionTitle').textContent = question.title;
+        document.getElementById('questionDescription').textContent = question.description;
+      });
+    }
+
     // Function to submit an answer
     function submitAnswer(event) {
       event.preventDefault(); // Prevent default form submission
       var answerContent = document.getElementById('answerContent').value; // Get answer content from input field
       var username = document.getElementById('username').value || 'Anonymous'; // Get username or set default value
 
+      // Get question ID from URL query parameter
+      var params = new URLSearchParams(window.location.search);
+      var questionId = params.get('questionId');
+
       // Save answer to Firebase database
-      var newAnswerRef = database.ref('answers').push(); // Create a new answer reference
+      var newAnswerRef = database.ref('answers/' + questionId).push(); // Create a new answer reference
       newAnswerRef.set({
         content: answerContent,
         username: username,
@@ -119,55 +101,9 @@
       });
     }
 
-    // Function to load question details from Firebase database
-    function loadQuestionDetails() {
-      var questionTitleElem = document.getElementById('questionTitle');
-      var questionDescriptionElem = document.getElementById('questionDescription');
-
-      database.ref('question').once('value').then(function(snapshot) {
-        var questionData = snapshot.val();
-        questionTitleElem.textContent = questionData.title;
-        questionDescriptionElem.textContent = questionData.description;
-      });
-    }
-
-    // Function to load answers from Firebase database
-    function loadAnswers() {
-      var answerList = document.getElementById('answerList');
-      database.ref('answers').on('value', function(snapshot) {
-        answerList.innerHTML = ''; // Clear previous answers
-        snapshot.forEach(function(childSnapshot) {
-          var answer = childSnapshot.val();
-          var answerItem = document.createElement('li');
-          answerItem.classList.add('answer');
-          answerItem.innerHTML = `
-            <div class="answer-content">${answer.content}</div>
-            <div class="answer-actions">
-              <span>By: ${answer.username}</span>
-              <button class="vote-btn" onclick="upvoteAnswer('${childSnapshot.key}')">Upvote</button>
-              <span>Upvotes: ${answer.upvotes}</span>
-            </div>
-          `;
-          answerList.appendChild(answerItem);
-        });
-      });
-    }
-
-    // Function to upvote an answer
-    function upvoteAnswer(answerId) {
-      var answerRef = database.ref('answers').child(answerId);
-      answerRef.transaction(function(answer) {
-        if (answer) {
-          answer.upvotes = (answer.upvotes || 0) + 1;
-        }
-        return answer;
-      });
-    }
-
-    // Load question details and answers when the page loads
+    // Load question details when the page loads
     window.onload = function() {
       loadQuestionDetails();
-      loadAnswers();
     };
   </script>
 </body>
