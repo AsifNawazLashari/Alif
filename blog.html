@@ -127,6 +127,48 @@ button:hover {
       }
     });
   </script>
+
+<script>
+  // Function to handle form submission
+  document.getElementById('postForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    console.log('Form submitted'); // Log form submission
+
+    // Get form data
+    const formData = new FormData(e.target);
+    const username = formData.get('username');
+    const post = formData.get('post');
+
+    try {
+      // Connect to Supabase
+      const supabase = await connectToSupabase();
+      console.log('Connected to Supabase:', supabase);
+
+      // Insert post into database
+      const { data, error } = await supabase
+        .from('post')
+        .insert([{ username, post }]);
+
+      if (error) {
+        throw error;
+      }
+
+      console.log('Post created:', data); // Log success message
+
+      // Clear form inputs
+      document.getElementById('username').value = '';
+      document.getElementById('post').value = '';
+
+      // Optionally, display a success message or redirect to another page
+    } catch (error) {
+      console.error('Error creating post:', error.message); // Log error message
+      // Optionally, display an error message to the user
+    }
+  });
+</script>
+
+  
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
