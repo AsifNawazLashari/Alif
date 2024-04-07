@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questions List</title>
+  <style>
+    /* Add your CSS styling here */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+    .question {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .question:hover {
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    .question-title {
+      font-weight: bold;
+    }
+    .question-details {
+      margin-top: 5px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Questions List</h1>
+  <div id="questionsList"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+  <script>
+    // Initialize Firebase
+    var firebaseConfig = {
+      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
+      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
+      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
+      projectId: "asifnawazlashari-85eff",
+      storageBucket: "asifnawazlashari-85eff.appspot.com",
+      messagingSenderId: "436734491671",
+      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
+      measurementId: "G-40RZ2LQPZN"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to the Firebase database
+    var database = firebase.database();
+
+    // Function to load questions from Firebase database
+    function loadQuestions() {
+      var questionsListElem = document.getElementById('questionsList');
+
+      database.ref('questions').on('value', function(snapshot) {
+        questionsListElem.innerHTML = ''; // Clear previous questions
+        snapshot.forEach(function(childSnapshot) {
+          var question = childSnapshot.val();
+          var questionItem = document.createElement('div');
+          questionItem.classList.add('question');
+          questionItem.innerHTML = `
+            <div class="question-title">${question.title}</div>
+            <div class="question-details">
+              Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
+            </div>
+          `;
+          questionsListElem.appendChild(questionItem);
+        });
+      });
+    }
+
+    // Function to format timestamp
+    function formatTimestamp(timestamp) {
+      var date = new Date(timestamp);
+      return date.toLocaleString();
+    }
+
+    // Load questions when the page loads
+    window.onload = function() {
+      loadQuestions();
+    };
+  </script>
+</body>
+</html>
