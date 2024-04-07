@@ -67,41 +67,6 @@
       return date.toLocaleString();
     }
 
-    // Function to load questions from Firebase database
-    function loadQuestions() {
-      var questionsListElem = document.getElementById('questionsList');
-      var loadingElem = document.getElementById('loading');
-
-      // Show loading message
-      loadingElem.style.display = 'block';
-
-      database.ref('questions').on('value', function(snapshot) {
-        questionsListElem.innerHTML = ''; // Clear previous questions
-        snapshot.forEach(function(childSnapshot) {
-          var question = childSnapshot.val();
-
-          // Call function to get the number of replies for the current question
-          getRepliesCount(childSnapshot.key).then(function(repliesCount) {
-            var questionItem = document.createElement('div');
-            questionItem.classList.add('question');
-            questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")'); // Make question clickable
-            questionItem.innerHTML = `
-              <div class="question-title">${question.title}</div>
-              <div class="question-details">
-                Asked by: ${question.username} - ${formatTimestamp(question.timestamp)} - Total Replies: ${repliesCount}
-              </div>
-            `;
-            questionsListElem.appendChild(questionItem);
-          }).catch(function(error) {
-            console.error('Error fetching replies count:', error);
-          });
-        });
-
-        // Hide loading message
-        loadingElem.style.display = 'none';
-      });
-    }
-
     // Function to get the number of replies for a question
     function getRepliesCount(questionId) {
       return new Promise(function(resolve, reject) {
@@ -114,43 +79,47 @@
       });
     }
 
+    // Function to load questions from Firebase database
+    function loadQuestions() {
+      var questionsListElem = document.getElementById('questionsList');
+      var loadingElem = document.getElementById('loading');
+
+      // Show loading message
+      loadingElem.style.display = 'block';
+
+      database.ref('questions').on('value', function(snapshot) {
+        questionsListElem.innerHTML = ''; // Clear previous questions
+        snapshot.forEach(async function(childSnapshot) {
+          var question = childSnapshot.val();
+
+          // Call function to get the number of replies for the current question
+          var repliesCount = await getRepliesCount(childSnapshot.key);
+
+          var questionItem = document.createElement('div');
+          questionItem.classList.add('question');
+          questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")'); // Make question clickable
+          questionItem.innerHTML = `
+            <div class="question-title">${question.title}</div>
+            <div class="question-details">
+              Asked by: ${question.username} - ${formatTimestamp(question.timestamp)} - Total Replies: ${repliesCount}
+            </div>
+          `;
+          questionsListElem.appendChild(questionItem);
+        });
+
+        // Hide loading message
+        loadingElem.style.display = 'none';
+      });
+    }
+
     // Function to redirect to answer page
     function redirectToAnswerPage(questionId) {
       window.location.href = 'answers.html?questionId=' + questionId;
     }
 
-    /// Function to load questions from Firebase database
-function loadQuestions() {
-  var questionsListElem = document.getElementById('questionsList');
-  var loadingElem = document.getElementById('loading');
-
-  // Show loading message
-  loadingElem.style.display = 'block';
-
-  database.ref('questions').on('value', function(snapshot) {
-    questionsListElem.innerHTML = ''; // Clear previous questions
-    snapshot.forEach(async function(childSnapshot) {
-      var question = childSnapshot.val();
-
-      // Call function to get the number of replies for the current question
-      var repliesCount = await getRepliesCount(childSnapshot.key);
-
-      var questionItem = document.createElement('div');
-      questionItem.classList.add('question');
-      questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")'); // Make question clickable
-      questionItem.innerHTML = `
-        <div class="question-title">${question.title}</div>
-        <div class="question-details">
-          Asked by: ${question.username} - ${formatTimestamp(question.timestamp)} - Total Replies: ${repliesCount}
-        </div>
-      `;
-      questionsListElem.appendChild(questionItem);
-    });
-
-    // Hide loading message
-    loadingElem.style.display = 'none';
-  });
-}
+    // Load questions when the page loads
+    window.onload = function() {
+      loadQuestions();
+    };
   </script>
 </body>
-</html>
