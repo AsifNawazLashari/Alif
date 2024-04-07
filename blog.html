@@ -3,29 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Post Page</title>
-  <style>
-    /* Your CSS styles here */
-  </style>
+  <title>Create Post</title>
+  <!-- Include Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+  <script>
+    // Initialize Firebase
+    var firebaseConfig = {
+      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
+      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
+      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
+      projectId: "asifnawazlashari-85eff",
+      storageBucket: "asifnawazlashari-85eff.appspot.com",
+      messagingSenderId: "436734491671",
+      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
+      measurementId: "G-40RZ2LQPZN"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to the Firebase database
+    var database = firebase.database();
+
+    // Function to handle form submission
+    function submitPost(event) {
+      event.preventDefault(); // Prevent default form submission
+      var postContent = document.getElementById('postContent').value; // Get post content from input field
+
+      // Save post to Firebase database
+      var newPostRef = database.ref('posts').push(); // Create a new post reference
+      newPostRef.set({
+        content: postContent,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }).then(function() {
+        alert('Post created successfully!');
+        // Reset form fields after successful submission
+        document.getElementById('postForm').reset();
+      }).catch(function(error) {
+        console.error('Error creating post:', error);
+      });
+    }
+  </script>
 </head>
 <body>
-  <div class="container">
-    <h1>Create a3 Post</h1>
-    <form id="postForm">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required><br>
-      <label for="post">Post:</label>
-      <textarea id="post" name="post" rows="4" required></textarea><br>
-      <button type="submit">Post</button>
-    </form>
-  </div>
-  
-  <script>
-    document.getElementById('postForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); // Prevent default form submission
-
-      console.log('Form submitted'); // Log form submission
-    });
-  </script>
+  <h1>Create a Post</h1>
+  <!-- Post form -->
+  <form id="postForm" onsubmit="submitPost(event)">
+    <label for="postContent">Post Content:</label><br>
+    <textarea id="postContent" name="postContent" rows="4" cols="50" required></textarea><br>
+    <button type="submit">Post</button>
+  </form>
 </body>
 </html>
