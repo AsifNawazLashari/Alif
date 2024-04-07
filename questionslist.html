@@ -29,22 +29,18 @@
       margin-top: 5px;
       color: #666;
     }
-    .replies-count {
-      background-color: lightgreen;
-      padding: 2px 5px;
-      border-radius: 4px;
-    }
-    .loading-message {
+    .loading {
       text-align: center;
       font-style: italic;
+      color: #666;
     }
   </style>
 </head>
 <body>
-  <h1> New Questions List</h1>
-  <div id="questionsList">
-    <div class="loading-message">Loading questions...</div>
-  </div>
+  <h1>Questions List</h1>
+  <div id="questionsList"></div>
+
+  <div id="loading" class="loading">Loading...</div>
 
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
@@ -65,39 +61,45 @@
     // Reference to the Firebase database
     var database = firebase.database();
 
-    // Function to load questions from Firebase database
-    function loadQuestions() {
-      var questionsListElem = document.getElementById('questionsList');
-      questionsListElem.innerHTML = '<div class="loading-message">Loading questions...</div>'; // Show loading message
-
-      database.ref('questions').once('value').then(function(snapshot) {
-        questionsListElem.innerHTML = ''; // Clear previous questions
-        snapshot.forEach(function(childSnapshot) {
-          var question = childSnapshot.val();
-          var questionKey = childSnapshot.key;
-          // Fetch replies count for the current question
-          getRepliesCount(questionKey).then(function(repliesCount) {
-            var questionItem = document.createElement('div');
-            questionItem.classList.add('question');
-            questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + questionKey + '")'); // Make question clickable
-            questionItem.innerHTML = `
-              <div class="question-title">${question.title}</div>
-              <div class="question-details">
-                Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
-                <br>
-                Replies: <span class="replies-count">${repliesCount}</span> - Total Voted: ${question.totalVotes || 0}
-              </div>
-            `;
-            questionsListElem.appendChild(questionItem);
-          });
-        });
-      });
-    }
-
     // Function to format timestamp
     function formatTimestamp(timestamp) {
       var date = new Date(timestamp);
       return date.toLocaleString();
+    }
+
+    // Function to load questions from Firebase database
+    function loadQuestions() {
+      var questionsListElem = document.getElementById('questionsList');
+      var loadingElem = document.getElementById('loading');
+
+      // Show loading message
+      loadingElem.style.display = 'block';
+
+      database.ref('questions').on('value', function(snapshot) {
+        questionsListElem.innerHTML = ''; // Clear previous questions
+        snapshot.forEach(function(childSnapshot) {
+          var question = childSnapshot.val();
+
+          // Call function to get the number of replies for the current question
+          getRepliesCount(childSnapshot.key).then(function(repliesCount) {
+            var questionItem = document.createElement('div');
+            questionItem.classList.add('question');
+            questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")'); // Make question clickable
+            questionItem.innerHTML = `
+              <div class="question-title">${question.title}</div>
+              <div class="question-details">
+                Asked by: ${question.username} - ${formatTimestamp(question.timestamp)} - Total Replies: ${repliesCount}
+              </div>
+            `;
+            questionsListElem.appendChild(questionItem);
+          }).catch(function(error) {
+            console.error('Error fetching replies count:', error);
+          });
+        });
+
+        // Hide loading message
+        loadingElem.style.display = 'none';
+      });
     }
 
     // Function to get the number of replies for a question
@@ -106,6 +108,7 @@
         database.ref('answers').orderByChild('questionId').equalTo(questionId).once('value').then(function(snapshot) {
           resolve(snapshot.numChildren());
         }).catch(function(error) {
+          console.error('Error fetching replies:', error);
           reject(error);
         });
       });
