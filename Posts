@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Published</title>
+  <style>
+    /* Your CSS styles for the post appearance */
+    .post {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .post-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .post-details {
+      font-size: 14px;
+      color: #666;
+    }
+    .comments-section {
+      margin-top: 10px;
+    }
+    .comment {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="postContainer"></div>
+
+  <script>
+    // Dummy data representing a post
+    const post = {
+      userId: "userId1",
+      username: "User1",
+      timestamp: "2024-04-07T12:30:00",
+      title: "Sample Post",
+      body: "This is the body of the sample post.",
+      category: "Sample Category",
+      comments: [
+        {
+          userId: "userId2",
+          username: "User2",
+          timestamp: "2024-04-07T13:00:00",
+          text: "This is a comment on the sample post."
+        }
+      ],
+      likes: {
+        userId1: true,
+        userId2: true
+      }
+    };
+
+    // Function to render the post
+    function renderPost(post) {
+      const postContainer = document.getElementById('postContainer');
+
+      // Create post element
+      const postElement = document.createElement('div');
+      postElement.classList.add('post');
+
+      // Create post title element
+      const titleElement = document.createElement('div');
+      titleElement.classList.add('post-title');
+      titleElement.textContent = post.title;
+      postElement.appendChild(titleElement);
+
+      // Create post details element
+      const detailsElement = document.createElement('div');
+      detailsElement.classList.add('post-details');
+      detailsElement.textContent = `${post.username} - ${new Date(post.timestamp).toLocaleString()} - ${post.category}`;
+      postElement.appendChild(detailsElement);
+
+      // Create post body element
+      const bodyElement = document.createElement('div');
+      bodyElement.textContent = post.body;
+      postElement.appendChild(bodyElement);
+
+      // Create comments section
+      const commentsSection = document.createElement('div');
+      commentsSection.classList.add('comments-section');
+      postElement.appendChild(commentsSection);
+
+      // Render comments
+      post.comments.forEach(comment => {
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment');
+        commentElement.textContent = `${comment.username} - ${new Date(comment.timestamp).toLocaleString()}: ${comment.text}`;
+        commentsSection.appendChild(commentElement);
+      });
+
+      // Render likes
+      const likesElement = document.createElement('div');
+      likesElement.textContent = `Likes: ${Object.keys(post.likes).length}`;
+      postElement.appendChild(likesElement);
+
+      // Append post element to container
+      postContainer.appendChild(postElement);
+    }
+
+    // Render the post
+    renderPost(post);
+  </script>
+</body>
+</html>
