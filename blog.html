@@ -10,31 +10,21 @@
 </head>
 <body>
   <div class="container">
-    <h1>Create aaaa Post</h1>
+    <h1>Create a3 Post</h1>
     <form id="postForm">
       <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
+      <input type="text" id="username" name="username" required><br>
       <label for="post">Post:</label>
-      <textarea id="post" name="post" rows="4" required></textarea>
+      <textarea id="post" name="post" rows="4" required></textarea><br>
       <button type="submit">Post</button>
     </form>
   </div>
   
   <script>
-    // Function to handle form submission
     document.getElementById('postForm').addEventListener('submit', async (e) => {
       e.preventDefault(); // Prevent default form submission
 
-      // Get form data
-      const formData = new FormData(e.target);
-      const username = formData.get('username');
-      const post = formData.get('post');
-
-      // Log form data
-      console.log('Username:', username);
-      console.log('Post:', post);
-
-      // Optionally, perform further actions such as sending data to a server
+      console.log('Form submitted'); // Log form submission
     });
   </script>
 </body>
