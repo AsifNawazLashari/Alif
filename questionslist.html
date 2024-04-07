@@ -67,18 +67,23 @@
         questionsListElem.innerHTML = ''; // Clear previous questions
         snapshot.forEach(function(childSnapshot) {
           var question = childSnapshot.val();
-          var questionItem = document.createElement('div');
-          questionItem.classList.add('question');
-          questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")'); // Make question clickable
-          questionItem.innerHTML = `
-            <div class="question-title">${question.title}</div>
-            <div class="question-details">
-              Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
-              <br>
-              Replies: <span class="replies-count">${question.totalReplies || 0}</span> - Total Voted: ${question.totalVotes || 0}
-            </div>
-          `;
-          questionsListElem.appendChild(questionItem);
+          var questionKey = childSnapshot.key;
+          // Fetch replies count for the current question
+          database.ref('answers').orderByChild('questionId').equalTo(questionKey).on('value', function(answerSnapshot) {
+            var repliesCount = answerSnapshot.numChildren();
+            var questionItem = document.createElement('div');
+            questionItem.classList.add('question');
+            questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + questionKey + '")'); // Make question clickable
+            questionItem.innerHTML = `
+              <div class="question-title">${question.title}</div>
+              <div class="question-details">
+                Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
+                <br>
+                Replies: <span class="replies-count">${repliesCount}</span> - Total Voted: ${question.totalVotes || 0}
+              </div>
+            `;
+            questionsListElem.appendChild(questionItem);
+          });
         });
       });
     }
