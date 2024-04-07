@@ -69,7 +69,7 @@ button:hover {
 </style>
 </head>
 <body>
-  <h1>Create a Post</h1>
+  <h1>Create aa Post</h1>
   <form id="postForm">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
@@ -78,59 +78,10 @@ button:hover {
     <textarea id="post" name="post" rows="4" required></textarea>
     <br>
     <button type="submit">Post</button>
-  </form>
 
-  <script>
-    // Supabase connection code
-    async function connectToSupabase() {
-      console.log('Connecting to Supabase...');
-      const supabaseUrl = 'https://uymohtxakjtqlpvgxckg.supabase.co';
-      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5bW9odHhha2p0cWxwdmd4Y2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTE3Mzk4OTgsImV4cCI6MjAyNzMxNTg5OH0.OqNq1Ai0OLLs_8x_pUijvqlUIny4wrQGW80puOQJHGY';
-      return createClient(supabaseUrl, supabaseKey);
-    }
-
-    // Function to handle form submission
-    document.getElementById('postForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); // Prevent default form submission
-      
-      console.log('Form submitted');
-
-      // Get form data
-      const formData = new FormData(e.target);
-      const username = formData.get('username');
-      const post = formData.get('post');
-
-      try {
-        // Connect to Supabase
-        const supabase = await connectToSupabase();
-        console.log('Connected to Supabase:', supabase);
-        
-        // Insert post into database
-        const { data, error } = await supabase
-          .from('post')
-          .insert([{ username, post }]);
-        
-        if (error) {
-          throw error;
-        }
-        
-        console.log('Post created:', data);
-        
-        // Clear form inputs
-        document.getElementById('username').value = '';
-        document.getElementById('post').value = '';
-        
-        // Optionally, display a success message or redirect to another page
-      } catch (error) {
-        console.error('Error creating post:', error.message);
-        // Optionally, display an error message to the user
-      }
-    });
-  </script>
-
-<script>
+    <script>
   // Function to handle form submission
-  document.getElementById('postForm').addEventListener('submit', async (e) => {
+  document.getElementById('postForm').addEventListener('submit', (e) => {
     e.preventDefault(); // Prevent default form submission
 
     console.log('Form submitted'); // Log form submission
@@ -140,34 +91,13 @@ button:hover {
     const username = formData.get('username');
     const post = formData.get('post');
 
-    try {
-      // Connect to Supabase
-      const supabase = await connectToSupabase();
-      console.log('Connected to Supabase:', supabase);
+    console.log('Username:', username);
+    console.log('Post:', post);
 
-      // Insert post into database
-      const { data, error } = await supabase
-        .from('post')
-        .insert([{ username, post }]);
-
-      if (error) {
-        throw error;
-      }
-
-      console.log('Post created:', data); // Log success message
-
-      // Clear form inputs
-      document.getElementById('username').value = '';
-      document.getElementById('post').value = '';
-
-      // Optionally, display a success message or redirect to another page
-    } catch (error) {
-      console.error('Error creating post:', error.message); // Log error message
-      // Optionally, display an error message to the user
-    }
+    // Optionally, display a success message or perform further actions
   });
-</script>
-
+    </script>
+    
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
