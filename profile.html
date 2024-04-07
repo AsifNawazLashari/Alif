@@ -42,6 +42,17 @@
     .edit-button:hover {
       background-color: #0056b3;
     }
+    #uploadButton {
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+    }
+    #uploadButton:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -60,7 +71,8 @@
       <div class="form-group">
         <label for="profileImage">Profile Picture:</label><br>
         <img src="" alt="Profile Picture" id="profileImage" class="profile-image"><br>
-        <input type="file" id="imageFile" accept="image/*" onchange="uploadProfilePicture()">
+        <input type="file" id="imageFile" accept="image/*" style="display: none;">
+        <button id="uploadButton">Upload</button>
       </div>
       <div class="form-group">
         <label for="username">Username:</label><br>
@@ -76,14 +88,14 @@
   <script>
     // Initialize Firebase
     var firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      databaseURL: "YOUR_DATABASE_URL",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID",
-      measurementId: "YOUR_MEASUREMENT_ID"
+      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
+      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
+      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
+      projectId: "asifnawazlashari-85eff",
+      storageBucket: "asifnawazlashari-85eff.appspot.com",
+      messagingSenderId: "436734491671",
+      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
+      measurementId: "G-40RZ2LQPZN",
     };
     firebase.initializeApp(firebaseConfig);
 
@@ -105,8 +117,12 @@
     });
 
     // Function to upload profile picture
-    function uploadProfilePicture() {
-      var imageFile = document.getElementById('imageFile').files[0];
+    document.getElementById('uploadButton').addEventListener('click', function() {
+      document.getElementById('imageFile').click();
+    });
+
+    document.getElementById('imageFile').addEventListener('change', function(event) {
+      var imageFile = event.target.files[0];
       var userId = firebase.auth().currentUser.uid;
       var storageRef = firebase.storage().ref('profile_pictures/' + userId);
       var uploadTask = storageRef.put(imageFile);
@@ -114,31 +130,44 @@
       uploadTask.on('state_changed',
         function(snapshot) {
           // Track progress
+          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+              console.log('Upload is paused');
+              break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+              console.log('Upload is running');
+              break;
+          }
         },
         function(error) {
+          // Handle unsuccessful uploads
           console.error('Error uploading profile picture:', error);
         },
         function() {
-          // Upload complete, update user's profile picture URL
+          // Handle successful uploads on complete
           uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            console.log('File available at', downloadURL);
+            // Update user's profile picture URL
             firebase.auth().currentUser.updateProfile({
               photoURL: downloadURL
             }).then(function() {
               // Profile picture updated successfully
               document.getElementById('profileImage').src = downloadURL;
-              alert('Profile picture updated successfully!');
+              alert('Profile picture uploaded successfully!');
             }).catch(function(error) {
               console.error('Error updating profile picture URL:', error);
             });
           });
         }
       );
-    }
+    });
 
     // Function to edit username
     function editUsername() {
-      var newUsername = prompt('Enter your new username:');
-      if (newUsername && newUsername.trim() !== '') {
+      var newUsername = prompt('Enter new username:');
+      if (newUsername) {
         firebase.auth().currentUser.updateProfile({
           displayName: newUsername
         }).then(function() {
