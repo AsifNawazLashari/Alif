@@ -17,6 +17,7 @@
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
       padding: 10px;
       margin-bottom: 10px;
+      cursor: pointer; /* Make questions clickable */
     }
     .question:hover {
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -63,6 +64,7 @@
           var question = childSnapshot.val();
           var questionItem = document.createElement('div');
           questionItem.classList.add('question');
+          questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")'); // Make question clickable
           questionItem.innerHTML = `
             <div class="question-title">${question.title}</div>
             <div class="question-details">
@@ -78,6 +80,11 @@
     function formatTimestamp(timestamp) {
       var date = new Date(timestamp);
       return date.toLocaleString();
+    }
+
+    // Function to redirect to answer page
+    function redirectToAnswerPage(questionId) {
+      window.location.href = 'answer_page.html?questionId=' + questionId;
     }
 
     // Load questions when the page loads
