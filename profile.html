@@ -53,6 +53,18 @@
     #uploadButton:hover {
       background-color: #0056b3;
     }
+    #continueButton {
+      cursor: pointer;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      margin-top: 20px;
+    }
+    #continueButton:hover {
+      background-color: #218838;
+    }
   </style>
 </head>
 <body>
@@ -72,7 +84,7 @@
         <label for="profileImage">Profile Picture:</label><br>
         <img src="" alt="Profile Picture" id="profileImage" class="profile-image"><br>
         <input type="file" id="imageFile" accept="image/*" style="display: none;">
-        <button id="uploadButton">Upload</button>
+        <button id="uploadButton">Update Picture</button>
       </div>
       <div class="form-group">
         <label for="username">Username:</label><br>
@@ -80,6 +92,7 @@
         <button class="edit-button" onclick="editUsername()">Edit</button>
       </div>
     </div>
+    <button id="continueButton" onclick="continueToNextPage()">Continue</button>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
@@ -95,7 +108,7 @@
       storageBucket: "asifnawazlashari-85eff.appspot.com",
       messagingSenderId: "436734491671",
       appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
-      measurementId: "G-40RZ2LQPZN",
+      measurementId: "G-40RZ2LQPZN"
     };
     firebase.initializeApp(firebaseConfig);
 
@@ -112,24 +125,55 @@
         }
       } else {
         // No user is signed in
-        window.location.href = 'login.html'; // Redirect to login page if user is not signed in
+        window.location.href = 'login.html'; // Redirect to login page if not logged in
       }
     });
 
-    // Function to upload profile picture
+    // Function to edit username
+    function editUsername() {
+      var newUsername = prompt('Enter new username:');
+      if (newUsername) {
+        firebase.auth().currentUser.updateProfile({
+          displayName: newUsername
+        }).then(function() {
+          // Username updated successfully
+          document.getElementById('username').textContent = newUsername;
+          alert('Username updated successfully!');
+        }).catch(function(error) {
+          console.error('Error updating username:', error);
+        });
+      }
+    }
+
+    // Function to reset password
+    function resetPassword() {
+      var email = firebase.auth().currentUser.email;
+      firebase.auth().sendPasswordResetEmail(email).then(function() {
+        // Password reset email sent successfully
+        alert('Password reset email sent to your email address. Please check your inbox.');
+      }).catch(function(error) {
+        console.error('Error sending password reset email:', error);
+      });
+    }
+
+    // Function to continue to the next page
+    function continueToNextPage() {
+      window.location.href = 'questionslist.html';
+    }
+
+    // Function to handle profile picture upload
     document.getElementById('uploadButton').addEventListener('click', function() {
       document.getElementById('imageFile').click();
     });
 
     document.getElementById('imageFile').addEventListener('change', function(event) {
-      var imageFile = event.target.files[0];
-      var userId = firebase.auth().currentUser.uid;
-      var storageRef = firebase.storage().ref('profile_pictures/' + userId);
-      var uploadTask = storageRef.put(imageFile);
+      var file = event.target.files[0];
+      var storageRef = firebase.storage().ref('profilePictures/' + file.name);
+      var uploadTask = storageRef.put(file);
 
       uploadTask.on('state_changed',
         function(snapshot) {
-          // Track progress
+          // Handle progress, pause, and resume
           var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log('Upload is ' + progress + '% done');
           switch (snapshot.state) {
@@ -163,33 +207,6 @@
         }
       );
     });
-
-    // Function to edit username
-    function editUsername() {
-      var newUsername = prompt('Enter new username:');
-      if (newUsername) {
-        firebase.auth().currentUser.updateProfile({
-          displayName: newUsername
-        }).then(function() {
-          // Username updated successfully
-          document.getElementById('username').textContent = newUsername;
-          alert('Username updated successfully!');
-        }).catch(function(error) {
-          console.error('Error updating username:', error);
-        });
-      }
-    }
-
-    // Function to reset password
-    function resetPassword() {
-      var email = firebase.auth().currentUser.email;
-      firebase.auth().sendPasswordResetEmail(email).then(function() {
-        // Password reset email sent successfully
-        alert('Password reset email sent to your email address. Please check your inbox.');
-      }).catch(function(error) {
-        console.error('Error sending password reset email:', error);
-      });
-    }
   </script>
 </body>
 </html>
