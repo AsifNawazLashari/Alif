@@ -10,7 +10,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Create 1a Post</h1>
+    <h1>Create aaaa Post</h1>
     <form id="postForm">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required>
@@ -21,23 +21,20 @@
   </div>
   
   <script>
-    console.log('JavaScript loaded'); // Log message to verify script execution
-
     // Function to handle form submission
-    document.getElementById('postForm').addEventListener('submit', (e) => {
+    document.getElementById('postForm').addEventListener('submit', async (e) => {
       e.preventDefault(); // Prevent default form submission
-
-      console.log('Form submitted'); // Log form submission
 
       // Get form data
       const formData = new FormData(e.target);
       const username = formData.get('username');
       const post = formData.get('post');
 
+      // Log form data
       console.log('Username:', username);
       console.log('Post:', post);
 
-      // Optionally, display a success message or perform further actions
+      // Optionally, perform further actions such as sending data to a server
     });
   </script>
 </body>
