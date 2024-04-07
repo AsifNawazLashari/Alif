@@ -67,18 +67,6 @@
       return date.toLocaleString();
     }
 
-    // Function to get the number of replies for a question
-    function getRepliesCount(questionId) {
-      return new Promise(function(resolve, reject) {
-        database.ref('answers').orderByChild('questionId').equalTo(questionId).once('value').then(function(snapshot) {
-          resolve(snapshot.numChildren());
-        }).catch(function(error) {
-          console.error('Error fetching replies:', error);
-          reject(error);
-        });
-      });
-    }
-
     // Function to load questions from Firebase database
     function loadQuestions() {
       var questionsListElem = document.getElementById('questionsList');
@@ -112,6 +100,18 @@
       });
     }
 
+    // Function to get the number of replies for a question
+    function getRepliesCount(questionId) {
+      return new Promise(function(resolve, reject) {
+        database.ref('answers').orderByChild('questionId').equalTo(questionId).once('value').then(function(snapshot) {
+          resolve(snapshot.numChildren());
+        }).catch(function(error) {
+          console.error('Error fetching replies:', error);
+          reject(error);
+        });
+      });
+    }
+
     // Function to redirect to answer page
     function redirectToAnswerPage(questionId) {
       window.location.href = 'answers.html?questionId=' + questionId;
@@ -123,3 +123,4 @@
     };
   </script>
 </body>
+</html>
