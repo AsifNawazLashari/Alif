@@ -30,6 +30,18 @@
     .form-group {
       margin-bottom: 10px;
     }
+    .edit-button {
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin-left: 10px;
+    }
+    .edit-button:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -43,6 +55,7 @@
       <div class="form-group">
         <label for="password">Password:</label><br>
         <span id="password"></span>
+        <button class="edit-button" onclick="resetPassword()">Edit</button>
       </div>
       <div class="form-group">
         <label for="profileImage">Profile Picture:</label><br>
@@ -52,6 +65,7 @@
       <div class="form-group">
         <label for="username">Username:</label><br>
         <span id="username"></span>
+        <button class="edit-button" onclick="editUsername()">Edit</button>
       </div>
     </div>
   </div>
@@ -62,14 +76,14 @@
   <script>
     // Initialize Firebase
     var firebaseConfig = {
-      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
-      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
-      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
-      projectId: "asifnawazlashari-85eff",
-      storageBucket: "asifnawazlashari-85eff.appspot.com",
-      messagingSenderId: "436734491671",
-      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
-      measurementId: "G-40RZ2LQPZN"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID",
+      measurementId: "YOUR_MEASUREMENT_ID"
     };
     firebase.initializeApp(firebaseConfig);
 
@@ -119,6 +133,33 @@
           });
         }
       );
+    }
+
+    // Function to edit username
+    function editUsername() {
+      var newUsername = prompt('Enter your new username:');
+      if (newUsername && newUsername.trim() !== '') {
+        firebase.auth().currentUser.updateProfile({
+          displayName: newUsername
+        }).then(function() {
+          // Username updated successfully
+          document.getElementById('username').textContent = newUsername;
+          alert('Username updated successfully!');
+        }).catch(function(error) {
+          console.error('Error updating username:', error);
+        });
+      }
+    }
+
+    // Function to reset password
+    function resetPassword() {
+      var email = firebase.auth().currentUser.email;
+      firebase.auth().sendPasswordResetEmail(email).then(function() {
+        // Password reset email sent successfully
+        alert('Password reset email sent to your email address. Please check your inbox.');
+      }).catch(function(error) {
+        console.error('Error sending password reset email:', error);
+      });
     }
   </script>
 </body>
