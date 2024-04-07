@@ -3,106 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Post Published</title>
+  <title>Posts</title>
   <style>
-    /* Your CSS styles for the post appearance */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
     .post {
-      border: 1px solid #ccc;
+      margin-bottom: 20px;
+      padding: 20px;
+      border: 1px solid #ddd;
       border-radius: 5px;
-      padding: 10px;
-      margin-bottom: 10px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     .post-title {
-      font-size: 18px;
+      color: #4caf50;
+      font-size: 20px;
       font-weight: bold;
+      margin-bottom: 10px;
     }
     .post-details {
       font-size: 14px;
-      color: #666;
+      color: #777777;
+      margin-bottom: 10px;
     }
-    .comments-section {
-      margin-top: 10px;
+    .post-body {
+      margin-bottom: 10px;
     }
     .comment {
-      margin-top: 5px;
+      font-style: italic;
+      color: #777777;
     }
   </style>
-</head>
-<body>
-  <div id="postContainer"></div>
-
+  <!-- Include Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
   <script>
-    // Dummy data representing a post
-    const post = {
-      userId: "userId1",
-      username: "User1",
-      timestamp: "2024-04-07T12:30:00",
-      title: "Sample Post",
-      body: "This is the body of the sample post.",
-      category: "Sample Category",
-      comments: [
-        {
-          userId: "userId2",
-          username: "User2",
-          timestamp: "2024-04-07T13:00:00",
-          text: "This is a comment on the sample post."
-        }
-      ],
-      likes: {
-        userId1: true,
-        userId2: true
-      }
+    // Initialize Firebase
+    var firebaseConfig = {
+      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
+      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
+      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
+      projectId: "asifnawazlashari-85eff",
+      storageBucket: "asifnawazlashari-85eff.appspot.com",
+      messagingSenderId: "436734491671",
+      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
+      measurementId: "G-40RZ2LQPZN"
     };
+    firebase.initializeApp(firebaseConfig);
 
-    // Function to render the post
-    function renderPost(post) {
-      const postContainer = document.getElementById('postContainer');
+    // Reference to the Firebase database
+    var database = firebase.database();
 
-      // Create post element
-      const postElement = document.createElement('div');
-      postElement.classList.add('post');
-
-      // Create post title element
-      const titleElement = document.createElement('div');
-      titleElement.classList.add('post-title');
-      titleElement.textContent = post.title;
-      postElement.appendChild(titleElement);
-
-      // Create post details element
-      const detailsElement = document.createElement('div');
-      detailsElement.classList.add('post-details');
-      detailsElement.textContent = `${post.username} - ${new Date(post.timestamp).toLocaleString()} - ${post.category}`;
-      postElement.appendChild(detailsElement);
-
-      // Create post body element
-      const bodyElement = document.createElement('div');
-      bodyElement.textContent = post.body;
-      postElement.appendChild(bodyElement);
-
-      // Create comments section
-      const commentsSection = document.createElement('div');
-      commentsSection.classList.add('comments-section');
-      postElement.appendChild(commentsSection);
-
-      // Render comments
-      post.comments.forEach(comment => {
-        const commentElement = document.createElement('div');
-        commentElement.classList.add('comment');
-        commentElement.textContent = `${comment.username} - ${new Date(comment.timestamp).toLocaleString()}: ${comment.text}`;
-        commentsSection.appendChild(commentElement);
+    // Function to fetch and display posts
+    function displayPosts() {
+      var postsRef = database.ref('posts');
+      postsRef.once('value', function(snapshot) {
+        var postsContainer = document.getElementById('postsContainer');
+        postsContainer.innerHTML = ''; // Clear previous posts
+        snapshot.forEach(function(childSnapshot) {
+          var postKey = childSnapshot.key;
+          var postData = childSnapshot.val();
+          var postDetails = 'Posted by ' + postData.username + ' - ' + new Date(postData.timestamp).toLocaleString();
+          var postBody = postData.content;
+          var postTitle = postData.title;
+          var postComments = postData.comments || [];
+          var postLikes = postData.likes || 0;
+          var postHTML = '<div class="post">' +
+                          '<div class="post-title">' + postTitle + '</div>' +
+                          '<div class="post-details">' + postDetails + '</div>' +
+                          '<div class="post-body">' + postBody + '</div>' +
+                          '<div class="comments">Comments: ' + postComments.length + '</div>' +
+                          '<div class="likes">Likes: ' + postLikes + '</div>' +
+                        '</div>';
+          postsContainer.innerHTML += postHTML;
+        });
       });
-
-      // Render likes
-      const likesElement = document.createElement('div');
-      likesElement.textContent = `Likes: ${Object.keys(post.likes).length}`;
-      postElement.appendChild(likesElement);
-
-      // Append post element to container
-      postContainer.appendChild(postElement);
     }
 
-    // Render the post
-    renderPost(post);
+    // Call the function to display posts when the page loads
+    window.onload = displayPosts;
   </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Posts</h1>
+    <div id="postsContainer"></div>
+  </div>
 </body>
 </html>
