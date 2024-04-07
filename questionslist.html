@@ -29,6 +29,11 @@
       margin-top: 5px;
       color: #666;
     }
+    .replies-count {
+      background-color: lightgreen;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -70,7 +75,7 @@
             <div class="question-details">
               Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
               <br>
-              Total Replies: ${question.totalReplies || 0} - Total Voted: ${question.totalVotes || 0}
+              Replies: <span class="replies-count">${question.totalReplies || 0}</span> - Total Voted: ${question.totalVotes || 0}
             </div>
           `;
           questionsListElem.appendChild(questionItem);
