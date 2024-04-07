@@ -80,19 +80,21 @@
         snapshot.forEach(function(childSnapshot) {
           var question = childSnapshot.val();
 
-          var questionItem = document.createElement('div');
-          questionItem.classList.add('question');
-          questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")'); // Make question clickable
-          questionItem.innerHTML = `
-            <div class="question-title">${question.title}</div>
-            <div class="question-details">
-              Asked by: ${question.username} - ${formatTimestamp(question.timestamp)} - Total Replies: Calculating...
-            </div>
-          `;
-          questionsListElem.appendChild(questionItem);
-
-          // Call function to calculate and update total replies count
-          calculateTotalReplies(childSnapshot.key, questionItem);
+          // Call function to get the number of replies for the current question
+          getAnswersCount(childSnapshot.key).then(function(answersCount) {
+            var questionItem = document.createElement('div');
+            questionItem.classList.add('question');
+            questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")'); // Make question clickable
+            questionItem.innerHTML = `
+              <div class="question-title">${question.title}</div>
+              <div class="question-details">
+                Asked by: ${question.username} - ${formatTimestamp(question.timestamp)} - Total Answers: ${answersCount}
+              </div>
+            `;
+            questionsListElem.appendChild(questionItem);
+          }).catch(function(error) {
+            console.error('Error fetching answers count:', error);
+          });
         });
 
         // Hide loading message
@@ -100,15 +102,15 @@
       });
     }
 
-    // Function to calculate total replies count for a question
-    function calculateTotalReplies(questionId, questionItem) {
-      var repliesCount = 0;
-      database.ref('answers').orderByChild('questionId').equalTo(questionId).once('value', function(snapshot) {
-        repliesCount = snapshot.numChildren();
-
-        // Update the total replies count in the question item
-        var questionDetailsElem = questionItem.querySelector('.question-details');
-        questionDetailsElem.innerHTML = questionDetailsElem.innerHTML.replace('Calculating...', repliesCount);
+    // Function to get the number of answers for a question
+    function getAnswersCount(questionId) {
+      return new Promise(function(resolve, reject) {
+        database.ref('answers').orderByChild('questionId').equalTo(questionId).once('value').then(function(snapshot) {
+          resolve(snapshot.numChildren());
+        }).catch(function(error) {
+          console.error('Error fetching answers:', error);
+          reject(error);
+        });
       });
     }
 
