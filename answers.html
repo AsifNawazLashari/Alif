@@ -78,11 +78,12 @@
     </ul>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
   <script>
     // Initialize Firebase
-    apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
+    var firebaseConfig = {
+      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
       authDomain: "asifnawazlashari-85eff.firebaseapp.com",
       databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
       projectId: "asifnawazlashari-85eff",
@@ -90,8 +91,7 @@
       messagingSenderId: "436734491671",
       appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
       measurementId: "G-40RZ2LQPZN"
-      };
-    
+    };
     firebase.initializeApp(firebaseConfig);
 
     // Reference to the Firebase database
