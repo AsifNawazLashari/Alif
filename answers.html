@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Answer</title>
+  <style>
+    /* Add your CSS styling here */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .answer-form {
+      margin-bottom: 20px;
+    }
+    .answer-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .answer {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .answer:hover {
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    .answer-content {
+      margin-bottom: 10px;
+    }
+    .answer-actions {
+      display: flex;
+      justify-content: space-between;
+    }
+    .vote-btn {
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+    }
+    .vote-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Question Details -->
+    <h2>Question Title</h2>
+    <p>Question Description goes here...</p>
+
+    <!-- Answer Submission Form -->
+    <div class="answer-form">
+      <h3>Submit Your Answer</h3>
+      <form id="answerForm" onsubmit="submitAnswer(event)">
+        <textarea id="answerContent" rows="4" cols="50" required></textarea><br>
+        <input type="text" id="username" placeholder="Your Username (optional)"><br>
+        <button type="submit">Submit Answer</button>
+      </form>
+    </div>
+
+    <!-- Answer List -->
+    <h3>Answers</h3>
+    <ul class="answer-list" id="answerList">
+      <!-- Answers will be dynamically populated here -->
+    </ul>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+  <script>
+    // Initialize Firebase
+    var firebaseConfig = {
+      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
+      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
+      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
+      projectId: "asifnawazlashari-85eff",
+      storageBucket: "asifnawazlashari-85eff.appspot.com",
+      messagingSenderId: "436734491671",
+      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
+      measurementId: "G-40RZ2LQPZN"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to the Firebase database
+    var database = firebase.database();
+
+    // Function to submit an answer
+    function submitAnswer(event) {
+      event.preventDefault(); // Prevent default form submission
+      var answerContent = document.getElementById('answerContent').value; // Get answer content from input field
+      var username = document.getElementById('username').value || 'Anonymous'; // Get username or set default value
+
+      // Save answer to Firebase database
+      var newAnswerRef = database.ref('answers').push(); // Create a new answer reference
+      newAnswerRef.set({
+        content: answerContent,
+        username: username,
+        upvotes: 0,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }).then(function() {
+        alert('Answer submitted successfully!');
+        // Reset form fields after successful submission
+        document.getElementById('answerForm').reset();
+      }).catch(function(error) {
+        console.error('Error submitting answer:', error);
+      });
+    }
+
+    // Function to load answers from Firebase database
+    function loadAnswers() {
+      var answerList = document.getElementById('answerList');
+      database.ref('answers').on('value', function(snapshot) {
+        answerList.innerHTML = ''; // Clear previous answers
+        snapshot.forEach(function(childSnapshot) {
+          var answer = childSnapshot.val();
+          var answerItem = document.createElement('li');
+          answerItem.classList.add('answer');
+          answerItem.innerHTML = `
+            <div class="answer-content">${answer.content}</div>
+            <div class="answer-actions">
+              <span>By: ${answer.username}</span>
+              <button class="vote-btn" onclick="upvoteAnswer('${childSnapshot.key}')">Upvote</button>
+              <span>Upvotes: ${answer.upvotes}</span>
+            </div>
+          `;
+          answerList.appendChild(answerItem);
+        });
+      });
+    }
+
+    // Function to upvote an answer
+    function upvoteAnswer(answerId) {
+      var answerRef = database.ref('answers').child(answerId);
+      answerRef.transaction(function(answer) {
+        if (answer) {
+          answer.upvotes = (answer.upvotes || 0) + 1;
+        }
+        return answer;
+      });
+    }
+
+    // Load answers when the page loads
+    window.onload = function() {
+      loadAnswers();
+    };
+  </script>
+</body>
+</html>
+
+
+
+      
