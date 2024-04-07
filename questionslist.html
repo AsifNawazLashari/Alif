@@ -76,7 +76,7 @@
           var question = childSnapshot.val();
           var questionKey = childSnapshot.key;
           // Fetch replies count for the current question
-          database.ref('answers').orderByChild('questionId').equalTo(questionKey).on('value', function(answerSnapshot) {
+          database.ref('answers').orderByChild('questionId').equalTo(questionKey).once('value', function(answerSnapshot) {
             var repliesCount = answerSnapshot.numChildren();
             var questionItem = document.createElement('div');
             questionItem.classList.add('question');
