@@ -6,45 +6,61 @@
   <title>Posts</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .post {
-      margin-bottom: 20px;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      background-color: #ffffff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .post-title {
-      color: #4caf50;
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .post-details {
-      font-size: 14px;
-      color: #777777;
-      margin-bottom: 10px;
-    }
-    .post-body {
-      margin-bottom: 10px;
-    }
-    .comment {
-      font-style: italic;
-      color: #777777;
-    }
+  font-family: 'Arial', sans-serif;
+  background-color: #f3f1e6; /* Light yellow */
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff; /* White */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #1a2930; /* Dark blue */
+}
+
+.post {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ccc; /* Light gray */
+  border-radius: 5px;
+  background-color: #f9f6f2; /* Light beige */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-title {
+  color: #4c4a48; /* Dark gray */
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.post-details {
+  font-size: 14px;
+  color: #777; /* Gray */
+  margin-bottom: 10px;
+}
+
+.post-body {
+  margin-bottom: 10px;
+}
+
+.comments {
+  font-style: italic;
+  color: #777; /* Gray */
+}
+
+.likes {
+  font-style: italic;
+  color: #777; /* Gray */
+}
+
   </style>
   <!-- Include Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
