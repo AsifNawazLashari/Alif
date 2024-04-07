@@ -7,48 +7,45 @@
   <title>Questions List</title>
   <style>
     /* CSS styling for the body */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      padding: 20px;
-    }
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
 
-    /* CSS styling for the question container */
-    .question {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-      padding: 15px;
-      margin-bottom: 15px;
-      cursor: pointer;
-    }
+/* CSS styling for the question container */
+.question {
+  background-color: #f2f2f2;
+  border-radius: 20px;
+  box-shadow: 20px 20px 40px #cbced1, 
+             -20px -20px 40px #ffffff;
+  padding: 30px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-    /* Hover effect for the question container */
-    .question:hover {
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
+/* Hover effect for the question container */
+.question:hover {
+  transform: translate(4px, 4px);
+  box-shadow: 30px 30px 60px #cbced1, 
+             -30px -30px 60px #ffffff;
+}
 
-    /* CSS styling for the question title */
-    .question-title {
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 5px;
-    }
+/* CSS styling for the question title */
+.question-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
 
-    /* CSS styling for the question details */
-    .question-details {
-      font-size: 14px;
-      color: #666;
-    }
+/* CSS styling for the question details */
+.question-details {
+  font-size: 18px;
+  color: #666;
+}
 
-    /* CSS styling for the loading message */
-    .loading {
-      text-align: center;
-      font-style: italic;
-      color: #666;
-      margin-top: 20px;
-    }
   </style>
 </head>
 <body>
