@@ -53,6 +53,10 @@
     .vote-btn:hover {
       background-color: #0056b3;
     }
+    .total-answers {
+      margin-top: 20px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -76,6 +80,9 @@
     <ul class="answer-list" id="answerList">
       <!-- Answers will be dynamically populated here -->
     </ul>
+
+    <!-- Total Answers -->
+    <div id="totalAnswers" class="total-answers">Total Answers: Calculating...</div>
   </div>
 
 <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
@@ -130,6 +137,9 @@
         `;
         answerList.appendChild(answerItem);
       });
+
+      // Calculate and display total answers for the question
+      calculateTotalAnswers(questionId);
     }
 
     // Function to submit an answer
@@ -160,12 +170,30 @@
 
     // Function to upvote an answer
     function upvoteAnswer(answerId) {
+      // Get question ID from URL query parameter
+      var params = new URLSearchParams(window.location.search);
+      var questionId = params.get('questionId');
+
       var answerRef = database.ref('answers/' + questionId).child(answerId);
       answerRef.transaction(function(answer) {
         if (answer) {
           answer.upvotes = (answer.upvotes || 0) + 1;
         }
         return answer;
+      });
+    }
+
+    // Function to calculate and display total answers for the question
+    function calculateTotalAnswers(questionId) {
+      var totalAnswersElem = document.getElementById('totalAnswers');
+
+      // Reference to the answers for the question in the database
+      var answersRef = database.ref('answers/' + questionId);
+      answersRef.once('value', function(snapshot) {
+        // Get the number of answers
+        var totalAnswers = snapshot.numChildren();
+        // Display the total answers on the page
+        totalAnswersElem.textContent = 'Total Answers: ' + totalAnswers;
       });
     }
 
