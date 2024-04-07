@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> All Questions List</title>
+  <title>Questions List</title>
   <style>
     /* Add your CSS styling here */
     body {
@@ -41,9 +41,9 @@
   </style>
 </head>
 <body>
-  <h1> Alll Questions List</h1>
+  <h1> New Questions List</h1>
   <div id="questionsList">
-    <div class="loading-message">Please wait! System is loading questions...</div>
+    <div class="loading-message">Loading questions...</div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
@@ -70,15 +70,13 @@
       var questionsListElem = document.getElementById('questionsList');
       questionsListElem.innerHTML = '<div class="loading-message">Loading questions...</div>'; // Show loading message
 
-      database.ref('questions').on('value', function(snapshot) {
+      database.ref('questions').once('value').then(function(snapshot) {
         questionsListElem.innerHTML = ''; // Clear previous questions
         snapshot.forEach(function(childSnapshot) {
           var question = childSnapshot.val();
           var questionKey = childSnapshot.key;
-          var repliesCount = 0;
           // Fetch replies count for the current question
-          database.ref('answers').orderByChild('questionId').equalTo(questionKey).once('value', function(answerSnapshot) {
-            repliesCount = answerSnapshot.numChildren();
+          getRepliesCount(questionKey).then(function(repliesCount) {
             var questionItem = document.createElement('div');
             questionItem.classList.add('question');
             questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + questionKey + '")'); // Make question clickable
@@ -100,6 +98,17 @@
     function formatTimestamp(timestamp) {
       var date = new Date(timestamp);
       return date.toLocaleString();
+    }
+
+    // Function to get the number of replies for a question
+    function getRepliesCount(questionId) {
+      return new Promise(function(resolve, reject) {
+        database.ref('answers').orderByChild('questionId').equalTo(questionId).once('value').then(function(snapshot) {
+          resolve(snapshot.numChildren());
+        }).catch(function(error) {
+          reject(error);
+        });
+      });
     }
 
     // Function to redirect to answer page
