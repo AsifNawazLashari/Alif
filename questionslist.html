@@ -98,26 +98,35 @@
         snapshot.forEach(function(childSnapshot) {
           var question = childSnapshot.val();
 
-          // Reference to the 'answers' node for the current question
-          var answersRef = database.ref('answers').orderByChild('questionId').equalTo(childSnapshot.key);
+          // Reference to the 'users' node to get the username
+          var userId = question.userId;
+          var userRef = database.ref('users/' + userId);
 
-          // Fetch the total number of answers for the current question
-          answersRef.once('value').then(function(answersSnapshot) {
-            var totalAnswers = answersSnapshot.numChildren();
+          // Fetch the username of the person who created the post
+          userRef.once('value').then(function(userSnapshot) {
+            var username = userSnapshot.val().username;
 
-            // Create HTML for the question with the total answers count
-            var questionItem = document.createElement('div');
-            questionItem.classList.add('question');
-            questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")');
-            questionItem.innerHTML = `
-              <div class="question-title">${question.title}</div>
-              <div class="question-details">
-                Asked by: ${question.username} - ${formatTimestamp(question.timestamp)} - Total Replies: ${totalAnswers}
-              </div>
-            `;
+            // Reference to the 'answers' node for the current question
+            var answersRef = database.ref('answers').orderByChild('questionId').equalTo(childSnapshot.key);
 
-            // Append the question HTML to the questions list
-            questionsListElem.appendChild(questionItem);
+            // Fetch the total number of answers for the current question
+            answersRef.once('value').then(function(answersSnapshot) {
+              var totalAnswers = answersSnapshot.numChildren();
+
+              // Create HTML for the question with the total answers count
+              var questionItem = document.createElement('div');
+              questionItem.classList.add('question');
+              questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")');
+              questionItem.innerHTML = `
+                <div class="question-title">${question.title}</div>
+                <div class="question-details">
+                  Asked by: ${username} - ${formatTimestamp(question.timestamp)} - Total Replies: ${totalAnswers}
+                </div>
+              `;
+
+              // Append the question HTML to the questions list
+              questionsListElem.appendChild(questionItem);
+            });
           });
         });
 
@@ -138,3 +147,8 @@
   </script>
 </body>
 </html>
+
+
+
+
+      
