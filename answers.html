@@ -21,6 +21,38 @@
     .answer-form {
       margin-bottom: 20px;
     }
+    .answer-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .answer {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .answer:hover {
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    .answer-content {
+      margin-bottom: 10px;
+    }
+    .answer-actions {
+      display: flex;
+      justify-content: space-between;
+    }
+    .vote-btn {
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+    }
+    .vote-btn:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -38,6 +70,12 @@
         <button type="submit">Submit Answer</button>
       </form>
     </div>
+
+    <!-- Answer List -->
+    <h3>Answers</h3>
+    <ul class="answer-list" id="answerList">
+      <!-- Answers will be dynamically populated here -->
+    </ul>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
@@ -45,22 +83,22 @@
   <script>
     // Initialize Firebase
     var firebaseConfig = {
-      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
-      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
-      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
-      projectId: "asifnawazlashari-85eff",
-      storageBucket: "asifnawazlashari-85eff.appspot.com",
-      messagingSenderId: "436734491671",
-      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
-      measurementId: "G-40RZ2LQPZN"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID",
+      measurementId: "YOUR_MEASUREMENT_ID"
     };
     firebase.initializeApp(firebaseConfig);
 
     // Reference to the Firebase database
     var database = firebase.database();
 
-    // Function to load question details from Firebase database
-    function loadQuestionDetails() {
+    // Function to load question details and answers from Firebase database
+    function loadQuestionAndAnswers() {
       // Get question ID from URL query parameter
       var params = new URLSearchParams(window.location.search);
       var questionId = params.get('questionId');
@@ -72,6 +110,25 @@
         // Set question details on the page
         document.getElementById('questionTitle').textContent = question.title;
         document.getElementById('questionDescription').textContent = question.description;
+      });
+
+      // Get answers for the question from database
+      var answerList = document.getElementById('answerList');
+      var answersRef = database.ref('answers/' + questionId);
+      answersRef.on('child_added', function(snapshot) {
+        var answer = snapshot.val();
+        // Render each answer
+        var answerItem = document.createElement('li');
+        answerItem.classList.add('answer');
+        answerItem.innerHTML = `
+          <div class="answer-content">${answer.content}</div>
+          <div class="answer-actions">
+            <span>By: ${answer.username}</span>
+            <button class="vote-btn" onclick="upvoteAnswer('${snapshot.key}')">Upvote</button>
+            <span>Upvotes: ${answer.upvotes}</span>
+          </div>
+        `;
+        answerList.appendChild(answerItem);
       });
     }
 
@@ -101,9 +158,20 @@
       });
     }
 
-    // Load question details when the page loads
+    // Function to upvote an answer
+    function upvoteAnswer(answerId) {
+      var answerRef = database.ref('answers/' + questionId).child(answerId);
+      answerRef.transaction(function(answer) {
+        if (answer) {
+          answer.upvotes = (answer.upvotes || 0) + 1;
+        }
+        return answer;
+      });
+    }
+
+    // Load question details and answers when the page loads
     window.onload = function() {
-      loadQuestionDetails();
+      loadQuestionAndAnswers();
     };
   </script>
 </body>
