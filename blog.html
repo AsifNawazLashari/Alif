@@ -54,6 +54,7 @@
   <script>
     // Supabase connection code
     async function connectToSupabase() {
+      console.log('Connecting to Supabase...');
       const supabaseUrl = 'https://uymohtxakjtqlpvgxckg.supabase.co';
       const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5bW9odHhha2p0cWxwdmd4Y2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTE3Mzk4OTgsImV4cCI6MjAyNzMxNTg5OH0.OqNq1Ai0OLLs_8x_pUijvqlUIny4wrQGW80puOQJHGY';
       return createClient(supabaseUrl, supabaseKey);
@@ -63,6 +64,8 @@
     document.getElementById('postForm').addEventListener('submit', async (e) => {
       e.preventDefault(); // Prevent default form submission
       
+      console.log('Form submitted');
+
       // Get form data
       const formData = new FormData(e.target);
       const username = formData.get('username');
@@ -71,6 +74,7 @@
       try {
         // Connect to Supabase
         const supabase = await connectToSupabase();
+        console.log('Connected to Supabase:', supabase);
         
         // Insert post into database
         const { data, error } = await supabase
