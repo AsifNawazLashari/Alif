@@ -34,11 +34,17 @@
       padding: 2px 5px;
       border-radius: 4px;
     }
+    .loading-message {
+      text-align: center;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
   <h1>Questions List</h1>
-  <div id="questionsList"></div>
+  <div id="questionsList">
+    <div class="loading-message">Loading questions...</div>
+  </div>
 
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
@@ -62,6 +68,7 @@
     // Function to load questions from Firebase database
     function loadQuestions() {
       var questionsListElem = document.getElementById('questionsList');
+      questionsListElem.innerHTML = '<div class="loading-message">Loading questions...</div>'; // Show loading message
 
       database.ref('questions').on('value', function(snapshot) {
         questionsListElem.innerHTML = ''; // Clear previous questions
