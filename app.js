@@ -50,23 +50,13 @@ function loadQuestions() {
           Category: ${question.category || 'Uncategorized'} | 
           Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
         </div>
-        <button class="shareButton">Share</button>
-        <button class="likeButton">Like</button>
       `;
-
-      // Event listener to redirect to answer page when clicked
-      questionItem.addEventListener('click', function() {
-        const questionId = childSnapshot.key;
-        redirectToAnswerPage(questionId);
-      });
 
       // Append the question HTML to the questions list
       questionsListElem.appendChild(questionItem);
     });
 
     loadingElem.style.display = 'none';
-  }, function(error) {
-    console.error('Error loading questions:', error);
   });
 }
 
@@ -82,37 +72,29 @@ function redirectToAnswerPage(questionId) {
 
 // Function to ask a new question
 const askQuestionButton = document.getElementById('askQuestionButton');
-if (askQuestionButton) {
-  askQuestionButton.addEventListener('click', function() {
-    const questionText = prompt('Enter your question:');
-    const category = prompt('Enter category (optional):');
-    if (questionText) {
-      const user = firebase.auth().currentUser;
-      const question = {
-        title: questionText,
-        username: user.displayName || 'Anonymous',
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-        category: category.trim() || null
-      };
-      database.ref('questions').push(question);
-    }
-  });
-} else {
-  console.error('Ask Question button not found');
-}
+askQuestionButton.addEventListener('click', function() {
+  const questionText = prompt('Enter your question:');
+  const category = prompt('Select a category: (article, blog, question, etc)');
+  if (questionText) {
+    const user = firebase.auth().currentUser;
+    const question = {
+      title: questionText,
+      username: user.displayName || 'Anonymous',
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      category: category.trim() || null
+    };
+    database.ref('questions').push(question);
+  }
+});
 
 // Function to logout
 const logoutButton = document.getElementById('logoutButton');
-if (logoutButton) {
-  logoutButton.addEventListener('click', function() {
-    firebase.auth().signOut().then(function() {
-      // Sign-out successful, redirect to login page
-      window.location.href = 'login.html';
-    }).catch(function(error) {
-      // An error happened
-      console.error('Sign out error:', error);
-    });
+logoutButton.addEventListener('click', function() {
+  firebase.auth().signOut().then(function() {
+    // Sign-out successful, redirect to login page
+    window.location.href = 'login.html';
+  }).catch(function(error) {
+    // An error happened
+    console.error('Sign out error:', error);
   });
-} else {
-  console.error('Logout button not found');
-}
+});
