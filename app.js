@@ -13,6 +13,7 @@ const firebaseConfig = {
 };
 
 
+
 firebase.initializeApp(firebaseConfig);
 
 // Reference to Firebase database
@@ -49,6 +50,7 @@ function loadQuestions() {
       });
     });
 
+    // Hide loading element after rendering questions
     loadingElem.style.display = 'none';
   });
 }
@@ -78,8 +80,8 @@ function formatTimestamp(timestamp) {
 }
 
 // Function to ask a new question
-const askQuestionButton = document.getElementById('askQuestionButton');
-askQuestionButton.addEventListener('click', function() {
+const askQuestionIcon = document.getElementById('askQuestionIcon');
+askQuestionIcon.addEventListener('click', function() {
   const questionText = prompt('Enter your question:');
   const category = prompt('Select a category: (article, blog, question, etc)');
   if (questionText) {
@@ -95,8 +97,8 @@ askQuestionButton.addEventListener('click', function() {
 });
 
 // Function to logout
-const logoutButton = document.getElementById('logoutButton');
-logoutButton.addEventListener('click', function() {
+const logoutIcon = document.getElementById('logoutIcon');
+logoutIcon.addEventListener('click', function() {
   firebase.auth().signOut().then(function() {
     // Sign-out successful, redirect to login page
     window.location.href = 'login.html';
@@ -104,4 +106,11 @@ logoutButton.addEventListener('click', function() {
     // An error happened
     console.error('Sign out error:', error);
   });
+});
+
+// Function to handle notifications
+const notificationIcon = document.getElementById('notificationIcon');
+notificationIcon.addEventListener('click', function() {
+  // Implement notification functionality here
+  alert('Notifications functionality will be implemented here.');
 });
