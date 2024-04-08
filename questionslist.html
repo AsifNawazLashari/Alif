@@ -1,111 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Meta tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Questions List</title>
-  <!-- External CSS file for styling -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css"> <!-- External CSS file for styling -->
 </head>
-<body> 
-
-  <style>
-  
-  /* Global styles */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
-  padding: 20px;
-  margin: 0;
-}
-
-/* Header styles */
-.header {
-  background-color: #f2f2f2;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 20px;
-  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(255, 255, 255, 0.5);
-}
-
-/* Footer styles */
-.footer {
-  background-color: #f2f2f2;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(255, 255, 255, 0.5);
-}
-
-/* Questions list styles */
-.questions-list {
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(255, 255, 255, 0.5);
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-/* Question item styles */
-.question {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 20px;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.1), -6px -6px 12px rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-}
-
-.question-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.question-details {
-  font-size: 14px;
-  color: #666;
-}
-
-/* Links styles */
-a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-  
-  </style>
-  <!-- Header section -->
+<body>
   <header class="header">
     <h1>Questions List</h1>
-    <!-- Button to ask a question -->
     <button id="askQuestionButton">Ask Question</button>
-    <!-- Button to logout -->
     <button id="logoutButton">Logout</button>
   </header>
   
-  <!-- Questions list section -->
   <div id="questionsList" class="questions-list"></div>
 
-  <!-- Footer section -->
   <footer class="footer">
     <p>Footer content here</p>
   </footer>
 
-  <!-- Loading indicator -->
   <div id="loading" class="loading">Loading...</div>
 
   <!-- Firebase and other scripts -->
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
-  <!-- JavaScript file for application logic -->
-  <script src="app.js"></script>
+  <script src="app.js"></script> <!-- JavaScript file for application logic -->
 </body>
 </html>
