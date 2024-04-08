@@ -1,18 +1,14 @@
-
-
 // Firebase configuration and initialization
 const firebaseConfig = {
   apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
-      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
-      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
-      projectId: "asifnawazlashari-85eff",
-      storageBucket: "asifnawazlashari-85eff.appspot.com",
-      messagingSenderId: "436734491671",
-      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
-      measurementId: "G-40RZ2LQPZN"
+  authDomain: "asifnawazlashari-85eff.firebaseapp.com",
+  databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
+  projectId: "asifnawazlashari-85eff",
+  storageBucket: "asifnawazlashari-85eff.appspot.com",
+  messagingSenderId: "436734491671",
+  appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
+  measurementId: "G-40RZ2LQPZN"
 };
-
-
 
 firebase.initializeApp(firebaseConfig);
 
@@ -24,6 +20,8 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in, load questions
     loadQuestions();
+    // Check for notifications
+    checkNotifications(user.uid);
   } else {
     // User is not signed in, redirect to login page
     window.location.href = 'login.html';
@@ -79,21 +77,25 @@ function formatTimestamp(timestamp) {
   // Format timestamp as required
 }
 
-// Function to ask a new question
-const askQuestionIcon = document.getElementById('askQuestionIcon');
-askQuestionIcon.addEventListener('click', function() {
-  const questionText = prompt('Enter your question:');
-  const category = prompt('Select a category: (article, blog, question, etc)');
-  if (questionText) {
-    const user = firebase.auth().currentUser;
-    const question = {
-      title: questionText,
-      username: user.displayName || 'Anonymous',
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      category: category.trim() || null
-    };
-    database.ref('questions').push(question);
-  }
+// Function to check for new notifications
+function checkNotifications(userId) {
+  database.ref('notifications/' + userId).on('value', function(snapshot) {
+    const notifications = snapshot.val();
+    if (notifications) {
+      // Show red dot for new notifications
+      const notificationIcon = document.getElementById('notificationIcon');
+      notificationIcon.innerHTML = '<i class="fas fa-bell"></i>';
+      notificationIcon.style.color = 'red';
+    }
+  });
+}
+
+// Function to handle notifications
+const notificationIcon = document.getElementById('notificationIcon');
+notificationIcon.addEventListener('click', function() {
+  // Show notification details when clicked
+  // Implement logic to display notification details
+  alert('Notification details will be displayed here.');
 });
 
 // Function to logout
@@ -106,11 +108,4 @@ logoutIcon.addEventListener('click', function() {
     // An error happened
     console.error('Sign out error:', error);
   });
-});
-
-// Function to handle notifications
-const notificationIcon = document.getElementById('notificationIcon');
-notificationIcon.addEventListener('click', function() {
-  // Implement notification functionality here
-  alert('Notifications functionality will be implemented here.');
 });
