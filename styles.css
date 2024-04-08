@@ -47,6 +47,25 @@ body {
   text-decoration: underline;
 }
 
+.user-actions {
+  margin-left: auto;
+}
+
+.user-actions button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.user-actions button:hover {
+  background-color: #0056b3;
+}
+
 /* Main content styles */
 .main-content {
   padding: 20px 0;
