@@ -12,6 +12,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+
+
 // Reference to Firebase database
 const database = firebase.database();
 
@@ -109,3 +111,8 @@ logoutIcon.addEventListener('click', function() {
     console.error('Sign out error:', error);
   });
 });
+
+// Call loadQuestions when the page loads
+window.onload = function() {
+  loadQuestions();
+};
