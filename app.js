@@ -110,6 +110,12 @@ askQuestionButton.addEventListener('click', function() {
   }
 });
 
+
+// Function to redirect to answer page
+function redirectToAnswerPage(questionId) {
+  window.location.href = 'answers.html?questionId=' + questionId;
+}
+
 // Function to logout
 const logoutButton = document.getElementById('logoutButton');
 logoutButton.addEventListener('click', function() {
