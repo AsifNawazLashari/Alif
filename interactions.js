@@ -1,12 +1,13 @@
-// Functionality for like and share buttons
-document.addEventListener('click', function(event) {
-  if (event.target.classList.contains('likeButton')) {
-    const questionId = event.target.parentElement.getAttribute('data-id');
-    // Implement like functionality (update likes count in database, display count)
-  }
+// Function to share a question
+function shareQuestion(questionId) {
+  // Implement sharing functionality
+  console.log('Sharing question with ID:', questionId);
+  // Add your sharing logic here
+}
 
-  if (event.target.classList.contains('shareButton')) {
-    const questionId = event.target.parentElement.getAttribute('data-id');
-    // Implement share functionality (show sharing options)
-  }
-});
+// Function to like a question
+function likeQuestion(questionId) {
+  // Implement liking functionality
+  console.log('Liking question with ID:', questionId);
+  // Add your liking logic here
+}
