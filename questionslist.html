@@ -8,18 +8,28 @@
 </head>
 <body>
   <header class="header">
-    <h1>Questions List</h1>
-    <button id="askQuestionButton">Ask Question</button>
-    <button id="logoutButton">Logout</button>
+    <div class="container">
+      <h1>Science Ki Duniya</h1> <!-- Updated site title -->
+      <div class="header-buttons">
+        <button id="askQuestionButton">Ask Question</button>
+        <button id="notificationButton">Notifications</button> <!-- New notification button -->
+        <button id="logoutButton">Logout</button>
+      </div>
+    </div>
   </header>
   
-  <div id="questionsList" class="questions-list"></div>
+  <main class="main-content">
+    <div class="container">
+      <div id="questionsList" class="questions-list"></div>
+      <div id="loading" class="loading">Loading...</div>
+    </div>
+  </main>
 
   <footer class="footer">
-    <p>Footer content here</p>
+    <div class="container">
+      <p>© 2024 Science Ki Duniya. All rights reserved.</p> <!-- Updated footer content -->
+    </div>
   </footer>
-
-  <div id="loading" class="loading">Loading...</div>
 
   <!-- Firebase and other scripts -->
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
