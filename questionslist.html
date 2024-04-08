@@ -4,28 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Questions List</title>
-  <link rel="stylesheet" href="styles.css"> <!-- External CSS file for styling -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* CSS styling for the header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #333;
+      color: #fff;
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .header .icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .header .icons i {
+      cursor: pointer;
+    }
+
+    /* Rest of your CSS styles */
+
+  </style>
 </head>
 <body>
-  <header class="header">
-    <h1>Questions List</h1>
-    <button id="askQuestionButton">Ask Question</button>
-    <button id="logoutButton">Logout</button>
-  </header>
-  
-  <div id="questionsList" class="questions-list"></div>
+  <div class="header">
+    <h1>Questions</h1>
+    <div class="icons">
+      <i class="fas fa-bell" id="notificationIcon"></i>
+      <i class="fas fa-question-circle" id="askQuestionIcon"></i>
+      <i class="fas fa-sign-out-alt" id="logoutIcon"></i>
+    </div>
+  </div>
 
-  <footer class="footer">
-    <p>Footer content here</p>
-  </footer>
+  <div id="questionsList"></div>
 
+  <!-- Loading element -->
   <div id="loading" class="loading">Loading...</div>
 
-  <!-- Firebase and other scripts -->
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
-  <script src="app.js"></script> <!-- JavaScript file for application logic -->
-  <script src="interactions.js"></script> <!-- JavaScript file for like and share functionalities -->
+  <script src="app.js"></script>
 </body>
 </html>
