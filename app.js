@@ -9,6 +9,11 @@ const firebaseConfig = {
       appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
       measurementId: "G-40RZ2LQPZN"
 };
+
+
+
+  // Your Firebase config details...
+};
 firebase.initializeApp(firebaseConfig);
 
 // Reference to Firebase database
@@ -45,6 +50,7 @@ function loadQuestions() {
       questionItem.innerHTML = `
         <div class="question-title">${question.title}</div>
         <div class="question-details">
+          Category: ${question.category || 'Uncategorized'} | 
           Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
         </div>
         <button class="shareButton">Share</button>
@@ -91,12 +97,14 @@ function likeQuestion(questionId) {
 const askQuestionButton = document.getElementById('askQuestionButton');
 askQuestionButton.addEventListener('click', function() {
   const questionText = prompt('Enter your question:');
+  const category = prompt('Enter category (optional):');
   if (questionText) {
     const user = firebase.auth().currentUser;
     const question = {
       title: questionText,
       username: user.displayName || 'Anonymous',
-      timestamp: firebase.database.ServerValue.TIMESTAMP
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      category: category.trim() || null
     };
     database.ref('questions').push(question);
   }
