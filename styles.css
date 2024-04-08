@@ -1,76 +1,69 @@
-/* Global styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
+  background-color: #f2f2f2; /* Matte background color */
   padding: 20px;
-  margin: 0;
 }
 
-/* Header styles */
-.header {
-  background-color: #f2f2f2;
+header {
+  background-color: #f2f2f2; /* Matte background color */
+  border-radius: 20px;
+  box-shadow: 12px 12px 24px #cbced1, -12px -12px 24px #ffffff;
   padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.header h1 {
-  font-size: 24px;
-  margin: 0;
-}
-
-/* Footer styles */
-.footer {
-  background-color: #f2f2f2;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Questions list styles */
-.questions-list {
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 10px;
   margin-bottom: 20px;
-  font-size: 14px;
 }
 
-/* Question item styles */
-.question {
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
 }
 
-.question-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 5px;
+nav ul li {
+  margin-right: 10px;
 }
 
-.question-details {
-  font-size: 12px;
-  color: #666;
-}
-
-/* Share and like button styles */
-.shareButton,
-.likeButton {
-  padding: 6px 12px;
-  margin-left: 10px;
-  font-size: 12px;
+nav ul li button {
+  background-color: transparent;
   border: none;
-  border-radius: 4px;
+  cursor: pointer;
+  color: #333;
+  font-size: 16px;
+}
+
+nav ul li button:hover {
+  text-decoration: underline;
+}
+
+main {
+  background-color: #f2f2f2;
+  border-radius: 20px;
+  box-shadow: 12px 12px 24px #cbced1, -12px -12px 24px #ffffff;
+  padding: 20px;
+}
+
+#loading {
+  display: none;
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.question {
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 6px 6px 12px #cbced1, -6px -6px 12px #ffffff;
   cursor: pointer;
 }
 
-/* Loading indicator */
-.loading {
-  display: none;
+.question-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.question-details {
+  font-size: 14px;
+  color: #666;
 }
