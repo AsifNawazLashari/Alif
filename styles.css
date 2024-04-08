@@ -5,57 +5,71 @@
   box-sizing: border-box;
 }
 
-/* Body styles */
+/* Global styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
+  background-color: #f7f7f7;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* Header styles */
-header {
+.header {
   background-color: #fff;
-  padding: 20px;
+  padding: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-header h1 {
+.header h1 {
   font-size: 24px;
-  font-weight: bold;
   color: #333;
 }
 
-nav ul {
-  list-style-type: none;
-  display: flex;
+.header-buttons {
+  margin-left: auto;
+}
+
+.header-buttons button {
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.header-buttons button:hover {
+  background-color: #45a049;
+}
+
+/* Main content styles */
+.main-content {
+  padding: 20px 0;
+}
+
+.questions-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
-}
-
-nav ul li {
-  display: inline-block;
-}
-
-nav ul li a {
-  color: #333;
-  text-decoration: none;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-nav ul li a:hover {
-  text-decoration: underline;
-}
-
-/* Question List styles */
-#questionsList {
-  margin: 20px;
 }
 
 .question {
   background-color: #fff;
   padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.question:hover {
+  transform: translateY(-5px);
 }
 
 .question-title {
@@ -70,7 +84,6 @@ nav ul li a:hover {
   color: #666;
 }
 
-/* Loading styles */
 .loading {
   text-align: center;
   margin-top: 50px;
@@ -78,33 +91,10 @@ nav ul li a:hover {
   color: #666;
 }
 
-/* Responsive styles */
-@media only screen and (max-width: 768px) {
-  header {
-    padding: 15px;
-  }
-
-  header h1 {
-    font-size: 20px;
-  }
-
-  nav ul li a {
-    font-size: 14px;
-  }
-
-  .question {
-    padding: 15px;
-  }
-
-  .question-title {
-    font-size: 16px;
-  }
-
-  .question-details {
-    font-size: 12px;
-  }
-
-  .loading {
-    font-size: 16px;
-  }
+/* Footer styles */
+.footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
 }
