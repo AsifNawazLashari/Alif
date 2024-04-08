@@ -1,5 +1,4 @@
 
-
 // Firebase configuration and initialization
 const firebaseConfig = {
   apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
@@ -51,14 +50,7 @@ function loadQuestions() {
           Category: ${question.category || 'Uncategorized'} | 
           Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
         </div>
-        <button class="shareButton">Share</button>
-        <button class="likeButton">Like</button>
       `;
-
-      // Event listener to redirect to answer page when question title is clicked
-      questionItem.querySelector('.question-title').addEventListener('click', function() {
-        redirectToAnswerPage(childSnapshot.key);
-      });
 
       // Append the question HTML to the questions list
       questionsListElem.appendChild(questionItem);
@@ -71,33 +63,6 @@ function loadQuestions() {
 // Function to format timestamp
 function formatTimestamp(timestamp) {
   // Format timestamp as required
-}
-
-// Event delegation for share and like buttons
-document.addEventListener('click', function(event) {
-  const target = event.target;
-
-  if (target.classList.contains('shareButton')) {
-    const questionId = target.parentElement.getAttribute('data-id');
-    // Implement sharing functionality
-    shareQuestion(questionId);
-  }
-
-  if (target.classList.contains('likeButton')) {
-    const questionId = target.parentElement.getAttribute('data-id');
-    // Implement liking functionality
-    likeQuestion(questionId);
-  }
-});
-
-// Function to share a question
-function shareQuestion(questionId) {
-  // Implement sharing functionality
-}
-
-// Function to like a question
-function likeQuestion(questionId) {
-  // Implement liking functionality
 }
 
 // Function to redirect to answer page
