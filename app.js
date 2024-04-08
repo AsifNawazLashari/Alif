@@ -1,6 +1,5 @@
 
 
-
 // Firebase configuration and initialization
 const firebaseConfig = {
   apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
@@ -56,8 +55,8 @@ function loadQuestions() {
         <button class="likeButton">Like</button>
       `;
 
-      // Event listener to redirect to answer page when clicked
-      questionItem.addEventListener('click', function() {
+      // Event listener to redirect to answer page when question title is clicked
+      questionItem.querySelector('.question-title').addEventListener('click', function() {
         redirectToAnswerPage(childSnapshot.key);
       });
 
@@ -76,13 +75,17 @@ function formatTimestamp(timestamp) {
 
 // Event delegation for share and like buttons
 document.addEventListener('click', function(event) {
-  if (event.target.classList.contains('shareButton')) {
-    const questionId = event.target.parentElement.getAttribute('data-id');
+  const target = event.target;
+
+  if (target.classList.contains('shareButton')) {
+    const questionId = target.parentElement.getAttribute('data-id');
+    // Implement sharing functionality
     shareQuestion(questionId);
   }
 
-  if (event.target.classList.contains('likeButton')) {
-    const questionId = event.target.parentElement.getAttribute('data-id');
+  if (target.classList.contains('likeButton')) {
+    const questionId = target.parentElement.getAttribute('data-id');
+    // Implement liking functionality
     likeQuestion(questionId);
   }
 });
@@ -106,7 +109,7 @@ function redirectToAnswerPage(questionId) {
 const askQuestionButton = document.getElementById('askQuestionButton');
 askQuestionButton.addEventListener('click', function() {
   const questionText = prompt('Enter your question:');
-  const category = prompt('Enter category (optional):');
+  const category = prompt('Select a category: (article, blog, question, etc)');
   if (questionText) {
     const user = firebase.auth().currentUser;
     const question = {
