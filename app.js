@@ -22,8 +22,6 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in, load questions
     loadQuestions();
-    // Check for notifications
-    checkNotifications(user.uid);
   } else {
     // User is not signed in, redirect to login page
     window.location.href = 'login.html';
@@ -43,35 +41,31 @@ function loadQuestions() {
     snapshot.forEach(function(childSnapshot) {
       const question = childSnapshot.val();
 
-      // Fetch total number of replies for this question
-      database.ref('replies/' + childSnapshot.key).once('value', function(replySnapshot) {
-        const totalReplies = replySnapshot.numChildren(); // Get the total number of replies
-        renderQuestion(question, childSnapshot.key, totalReplies); // Render the question with total replies
+      // Create HTML for the question
+      const questionItem = document.createElement('div');
+      questionItem.classList.add('question');
+      questionItem.setAttribute('data-id', childSnapshot.key);
+      questionItem.innerHTML = `
+        <div class="question-title">${question.title}</div>
+        <div class="question-details">
+          Category: ${question.category || 'Uncategorized'} | 
+          Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
+        </div>
+        <button class="shareButton">Share</button>
+        <button class="likeButton">Like</button>
+      `;
+
+      // Event listener to redirect to answer page when clicked
+      questionItem.addEventListener('click', function() {
+        redirectToAnswerPage(childSnapshot.key);
       });
+
+      // Append the question HTML to the questions list
+      questionsListElem.appendChild(questionItem);
     });
 
-    // Hide loading element after rendering questions
     loadingElem.style.display = 'none';
   });
-}
-
-// Function to render each question with total replies
-function renderQuestion(question, questionId, totalReplies) {
-  // Create HTML for the question
-  const questionItem = document.createElement('div');
-  questionItem.classList.add('question');
-  questionItem.setAttribute('data-id', questionId);
-  questionItem.innerHTML = `
-    <div class="question-title">${question.title}</div>
-    <div class="question-details">
-      Category: ${question.category || 'Uncategorized'} | 
-      Asked by: ${question.username} - ${formatTimestamp(question.timestamp)} |
-      Total Replies: ${totalReplies}
-    </div>
-  `;
-
-  // Append the question HTML to the questions list
-  document.getElementById('questionsList').appendChild(questionItem);
 }
 
 // Function to format timestamp
@@ -79,30 +73,54 @@ function formatTimestamp(timestamp) {
   // Format timestamp as required
 }
 
-// Function to check for new notifications
-function checkNotifications(userId) {
-  database.ref('notifications/' + userId).on('value', function(snapshot) {
-    const notifications = snapshot.val();
-    if (notifications) {
-      // Show red dot for new notifications
-      const notificationIcon = document.getElementById('notificationIcon');
-      notificationIcon.innerHTML = '<i class="fas fa-bell"></i>';
-      notificationIcon.style.color = 'red';
-    }
-  });
+// Event delegation for share and like buttons
+document.addEventListener('click', function(event) {
+  if (event.target.classList.contains('shareButton')) {
+    const questionId = event.target.parentElement.getAttribute('data-id');
+    shareQuestion(questionId);
+  }
+
+  if (event.target.classList.contains('likeButton')) {
+    const questionId = event.target.parentElement.getAttribute('data-id');
+    likeQuestion(questionId);
+  }
+});
+
+// Function to share a question
+function shareQuestion(questionId) {
+  // Implement sharing functionality
 }
 
-// Function to handle notifications
-const notificationIcon = document.getElementById('notificationIcon');
-notificationIcon.addEventListener('click', function() {
-  // Show notification details when clicked
-  // Implement logic to display notification details
-  alert('Notification details will be displayed here.');
+// Function to like a question
+function likeQuestion(questionId) {
+  // Implement liking functionality
+}
+
+// Function to redirect to answer page
+function redirectToAnswerPage(questionId) {
+  window.location.href = 'answers.html?questionId=' + questionId;
+}
+
+// Function to ask a new question
+const askQuestionButton = document.getElementById('askQuestionButton');
+askQuestionButton.addEventListener('click', function() {
+  const questionText = prompt('Enter your question:');
+  const category = prompt('Enter category (optional):');
+  if (questionText) {
+    const user = firebase.auth().currentUser;
+    const question = {
+      title: questionText,
+      username: user.displayName || 'Anonymous',
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      category: category.trim() || null
+    };
+    database.ref('questions').push(question);
+  }
 });
 
 // Function to logout
-const logoutIcon = document.getElementById('logoutIcon');
-logoutIcon.addEventListener('click', function() {
+const logoutButton = document.getElementById('logoutButton');
+logoutButton.addEventListener('click', function() {
   firebase.auth().signOut().then(function() {
     // Sign-out successful, redirect to login page
     window.location.href = 'login.html';
@@ -111,8 +129,3 @@ logoutIcon.addEventListener('click', function() {
     console.error('Sign out error:', error);
   });
 });
-
-// Call loadQuestions when the page loads
-window.onload = function() {
-  loadQuestions();
-};
