@@ -12,6 +12,7 @@ const firebaseConfig = {
       measurementId: "G-40RZ2LQPZN"
 };
 
+
 firebase.initializeApp(firebaseConfig);
 
 // Reference to Firebase database
@@ -68,7 +69,7 @@ function renderQuestion(question, questionId, totalReplies) {
   `;
 
   // Append the question HTML to the questions list
-  questionsListElem.appendChild(questionItem);
+  document.getElementById('questionsList').appendChild(questionItem);
 }
 
 // Function to format timestamp
