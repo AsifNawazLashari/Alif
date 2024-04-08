@@ -8,7 +8,8 @@
 /* Global styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
+  background-color: #f9f9f9;
+  color: #333;
 }
 
 .container {
@@ -20,32 +21,30 @@ body {
 /* Header styles */
 .header {
   background-color: #fff;
-  padding: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
 }
 
 .header h1 {
   font-size: 24px;
+}
+
+.nav ul {
+  list-style-type: none;
+}
+
+.nav ul li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.nav ul li a {
   color: #333;
+  text-decoration: none;
 }
 
-.header-buttons {
-  margin-left: auto;
-}
-
-.header-buttons button {
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  margin-left: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.header-buttons button:hover {
-  background-color: #45a049;
+.nav ul li a:hover {
+  text-decoration: underline;
 }
 
 /* Main content styles */
@@ -62,7 +61,7 @@ body {
 .question {
   background-color: #fff;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   cursor: pointer;
