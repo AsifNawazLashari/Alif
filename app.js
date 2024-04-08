@@ -1,3 +1,6 @@
+
+
+
 // Firebase configuration and initialization
 const firebaseConfig = {
   apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
@@ -10,10 +13,6 @@ const firebaseConfig = {
       measurementId: "G-40RZ2LQPZN"
 };
 
-
-
-  // Your Firebase config details...
-};
 firebase.initializeApp(firebaseConfig);
 
 // Reference to Firebase database
@@ -57,6 +56,11 @@ function loadQuestions() {
         <button class="likeButton">Like</button>
       `;
 
+      // Event listener to redirect to answer page when clicked
+      questionItem.addEventListener('click', function() {
+        redirectToAnswerPage(childSnapshot.key);
+      });
+
       // Append the question HTML to the questions list
       questionsListElem.appendChild(questionItem);
     });
@@ -93,6 +97,11 @@ function likeQuestion(questionId) {
   // Implement liking functionality
 }
 
+// Function to redirect to answer page
+function redirectToAnswerPage(questionId) {
+  window.location.href = 'answers.html?questionId=' + questionId;
+}
+
 // Function to ask a new question
 const askQuestionButton = document.getElementById('askQuestionButton');
 askQuestionButton.addEventListener('click', function() {
@@ -109,12 +118,6 @@ askQuestionButton.addEventListener('click', function() {
     database.ref('questions').push(question);
   }
 });
-
-
-// Function to redirect to answer page
-function redirectToAnswerPage(questionId) {
-  window.location.href = 'answers.html?questionId=' + questionId;
-}
 
 // Function to logout
 const logoutButton = document.getElementById('logoutButton');
