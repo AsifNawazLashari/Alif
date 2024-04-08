@@ -1,4 +1,5 @@
 
+
 // Firebase configuration and initialization
 const firebaseConfig = {
   apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
@@ -40,34 +41,39 @@ function loadQuestions() {
     snapshot.forEach(function(childSnapshot) {
       const question = childSnapshot.val();
 
-      // Create HTML for the question
-      const questionItem = document.createElement('div');
-      questionItem.classList.add('question');
-      questionItem.setAttribute('data-id', childSnapshot.key);
-      questionItem.innerHTML = `
-        <div class="question-title">${question.title}</div>
-        <div class="question-details">
-          Category: ${question.category || 'Uncategorized'} | 
-          Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
-        </div>
-      `;
-
-      // Append the question HTML to the questions list
-      questionsListElem.appendChild(questionItem);
+      // Fetch total number of replies for this question
+      database.ref('replies/' + childSnapshot.key).once('value', function(replySnapshot) {
+        const totalReplies = replySnapshot.numChildren(); // Get the total number of replies
+        renderQuestion(question, childSnapshot.key, totalReplies); // Render the question with total replies
+      });
     });
 
     loadingElem.style.display = 'none';
   });
 }
 
+// Function to render each question with total replies
+function renderQuestion(question, questionId, totalReplies) {
+  // Create HTML for the question
+  const questionItem = document.createElement('div');
+  questionItem.classList.add('question');
+  questionItem.setAttribute('data-id', questionId);
+  questionItem.innerHTML = `
+    <div class="question-title">${question.title}</div>
+    <div class="question-details">
+      Category: ${question.category || 'Uncategorized'} | 
+      Asked by: ${question.username} - ${formatTimestamp(question.timestamp)} |
+      Total Replies: ${totalReplies}
+    </div>
+  `;
+
+  // Append the question HTML to the questions list
+  questionsListElem.appendChild(questionItem);
+}
+
 // Function to format timestamp
 function formatTimestamp(timestamp) {
   // Format timestamp as required
-}
-
-// Function to redirect to answer page
-function redirectToAnswerPage(questionId) {
-  window.location.href = 'answers.html?questionId=' + questionId;
 }
 
 // Function to ask a new question
