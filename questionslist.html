@@ -1,61 +1,62 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Meta tags -->
   <title>Questions List</title>
+  <!-- External CSS file for styling -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body> 
+
   <style>
-    /* CSS styling for the body */
+  
+  /* Global styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f2f2f2; /* Matte background color */
+  background-color: #f2f2f2;
   padding: 20px;
+  margin: 0;
 }
 
-/* CSS styling for headers */
+/* Header styles */
 .header {
-  background-color: #f2f2f2; /* Matte background color */
-  border-radius: 20px;
-  box-shadow: 12px 12px 24px #cbced1, 
-             -12px -12px 24px #ffffff;
+  background-color: #f2f2f2;
   padding: 20px;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(255, 255, 255, 0.5);
 }
 
-/* CSS styling for footers */
+/* Footer styles */
 .footer {
-  background-color: #f2f2f2; /* Matte background color */
-  border-radius: 20px;
-  box-shadow: 12px 12px 24px #cbced1, 
-             -12px -12px 24px #ffffff;
+  background-color: #f2f2f2;
   padding: 20px;
-  margin-top: 20px;
+  border-radius: 20px;
+  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(255, 255, 255, 0.5);
 }
 
-/* CSS styling for questions list */
+/* Questions list styles */
 .questions-list {
-  background-color: #ffffff; /* White background color */
+  background-color: #ffffff;
   border-radius: 20px;
-  box-shadow: 12px 12px 24px #cbced1, 
-             -12px -12px 24px #ffffff;
+  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(255, 255, 255, 0.5);
   padding: 20px;
   margin-bottom: 20px;
 }
 
-/* CSS styling for question items */
-.question-item {
+/* Question item styles */
+.question {
   font-size: 16px;
-  color: #333; /* Text color */
+  color: #333;
   margin-bottom: 20px;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 6px 6px 12px #cbced1, 
-             -6px -6px 12px #ffffff;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.1), -6px -6px 12px rgba(255, 255, 255, 0.5);
   cursor: pointer;
 }
 
-/* CSS styling for question titles */
 .question-title {
   font-size: 20px;
   font-weight: bold;
@@ -63,102 +64,48 @@ body {
   margin-bottom: 10px;
 }
 
-/* CSS styling for question details */
 .question-details {
   font-size: 14px;
   color: #666;
 }
 
-/* CSS styling for links */
+/* Links styles */
 a {
-  color: #007bff; /* Link color */
+  color: #007bff;
   text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline; /* Underline on hover */
+  text-decoration: underline;
 }
 
-    
+  
   </style>
-</head>
-<body>
-  <h1>Questions List</h1>
-  <div id="questionsList"></div>
+  <!-- Header section -->
+  <header class="header">
+    <h1>Questions List</h1>
+    <!-- Button to ask a question -->
+    <button id="askQuestionButton">Ask Question</button>
+    <!-- Button to logout -->
+    <button id="logoutButton">Logout</button>
+  </header>
+  
+  <!-- Questions list section -->
+  <div id="questionsList" class="questions-list"></div>
 
+  <!-- Footer section -->
+  <footer class="footer">
+    <p>Footer content here</p>
+  </footer>
+
+  <!-- Loading indicator -->
   <div id="loading" class="loading">Loading...</div>
 
+  <!-- Firebase and other scripts -->
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
-  <script>
-    // Initialize Firebase
-    var firebaseConfig = {
-      apiKey: "AIzaSyA93kMK7VXwtvenkXAxWlZvJlPBlSaONR4",
-      authDomain: "asifnawazlashari-85eff.firebaseapp.com",
-      databaseURL: "https://asifnawazlashari-85eff-default-rtdb.firebaseio.com",
-      projectId: "asifnawazlashari-85eff",
-      storageBucket: "asifnawazlashari-85eff.appspot.com",
-      messagingSenderId: "436734491671",
-      appId: "1:436734491671:web:b4b4d4c4c590b4c8c47052",
-      measurementId: "G-40RZ2LQPZN"
-    };
-    firebase.initializeApp(firebaseConfig);
-
-    // Reference to the Firebase database
-    var database = firebase.database();
-
-    // Function to format timestamp
-    function formatTimestamp(timestamp) {
-      // Format the timestamp as required
-    }
-
-    // Function to load questions from Firebase database
-    function loadQuestions() {
-      // Retrieve the questions list element and loading element
-      var questionsListElem = document.getElementById('questionsList');
-      var loadingElem = document.getElementById('loading');
-
-      // Show loading message
-      loadingElem.style.display = 'block';
-
-      // Reference to the 'questions' node in the database
-      database.ref('questions').on('value', function(snapshot) {
-        // Clear previous questions
-        questionsListElem.innerHTML = '';
-
-        // Iterate through each question
-        snapshot.forEach(function(childSnapshot) {
-          var question = childSnapshot.val();
-
-          // Create HTML for the question
-          var questionItem = document.createElement('div');
-          questionItem.classList.add('question');
-          questionItem.setAttribute('onclick', 'redirectToAnswerPage("' + childSnapshot.key + '")');
-          questionItem.innerHTML = `
-            <div class="question-title">${question.title}</div>
-            <div class="question-details">
-              Asked by: ${question.username} - ${formatTimestamp(question.timestamp)}
-            </div>
-          `;
-
-          // Append the question HTML to the questions list
-          questionsListElem.appendChild(questionItem);
-        });
-
-        // Hide loading message
-        loadingElem.style.display = 'none';
-      });
-    }
-
-    // Function to redirect to answer page
-    function redirectToAnswerPage(questionId) {
-      window.location.href = 'answers.html?questionId=' + questionId;
-    }
-
-    // Load questions when the page loads
-    window.onload = function() {
-      loadQuestions();
-    };
-  </script>
+  <!-- JavaScript file for application logic -->
+  <script src="app.js"></script>
 </body>
 </html>
