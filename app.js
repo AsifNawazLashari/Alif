@@ -13,7 +13,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 
-
 // Reference to Firebase database
 const database = firebase.database();
 
@@ -57,7 +56,8 @@ function loadQuestions() {
 
       // Event listener to redirect to answer page when clicked
       questionItem.addEventListener('click', function() {
-        redirectToAnswerPage(childSnapshot.key);
+        const questionId = childSnapshot.key;
+        redirectToAnswerPage(questionId);
       });
 
       // Append the question HTML to the questions list
@@ -65,35 +65,14 @@ function loadQuestions() {
     });
 
     loadingElem.style.display = 'none';
+  }, function(error) {
+    console.error('Error loading questions:', error);
   });
 }
 
 // Function to format timestamp
 function formatTimestamp(timestamp) {
   // Format timestamp as required
-}
-
-// Event delegation for share and like buttons
-document.addEventListener('click', function(event) {
-  if (event.target.classList.contains('shareButton')) {
-    const questionId = event.target.parentElement.getAttribute('data-id');
-    shareQuestion(questionId);
-  }
-
-  if (event.target.classList.contains('likeButton')) {
-    const questionId = event.target.parentElement.getAttribute('data-id');
-    likeQuestion(questionId);
-  }
-});
-
-// Function to share a question
-function shareQuestion(questionId) {
-  // Implement sharing functionality
-}
-
-// Function to like a question
-function likeQuestion(questionId) {
-  // Implement liking functionality
 }
 
 // Function to redirect to answer page
@@ -103,29 +82,37 @@ function redirectToAnswerPage(questionId) {
 
 // Function to ask a new question
 const askQuestionButton = document.getElementById('askQuestionButton');
-askQuestionButton.addEventListener('click', function() {
-  const questionText = prompt('Enter your question:');
-  const category = prompt('Enter category (optional):');
-  if (questionText) {
-    const user = firebase.auth().currentUser;
-    const question = {
-      title: questionText,
-      username: user.displayName || 'Anonymous',
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      category: category.trim() || null
-    };
-    database.ref('questions').push(question);
-  }
-});
+if (askQuestionButton) {
+  askQuestionButton.addEventListener('click', function() {
+    const questionText = prompt('Enter your question:');
+    const category = prompt('Enter category (optional):');
+    if (questionText) {
+      const user = firebase.auth().currentUser;
+      const question = {
+        title: questionText,
+        username: user.displayName || 'Anonymous',
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        category: category.trim() || null
+      };
+      database.ref('questions').push(question);
+    }
+  });
+} else {
+  console.error('Ask Question button not found');
+}
 
 // Function to logout
 const logoutButton = document.getElementById('logoutButton');
-logoutButton.addEventListener('click', function() {
-  firebase.auth().signOut().then(function() {
-    // Sign-out successful, redirect to login page
-    window.location.href = 'login.html';
-  }).catch(function(error) {
-    // An error happened
-    console.error('Sign out error:', error);
+if (logoutButton) {
+  logoutButton.addEventListener('click', function() {
+    firebase.auth().signOut().then(function() {
+      // Sign-out successful, redirect to login page
+      window.location.href = 'login.html';
+    }).catch(function(error) {
+      // An error happened
+      console.error('Sign out error:', error);
+    });
   });
-});
+} else {
+  console.error('Logout button not found');
+}
