@@ -3,30 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Science Ki Duniya</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Questions List</title>
+  <link rel="stylesheet" href="styles.css"> <!-- External CSS file for styling -->
 </head>
 <body>
-  <header>
-    <h1>Science Ki Duniya</h1>
-    <nav>
-      <ul>
-        <li><a href="#" id="askQuestionIcon"><i class="fas fa-question-circle"></i> Ask Question</a></li>
-        <li><a href="#" id="notificationIcon"><i class="fas fa-bell"></i> Notifications</a></li>
-        <li><a href="#" id="logoutIcon"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-      </ul>
-    </nav>
+  <header class="header">
+    <h1>Questions List</h1>
+    <button id="askQuestionButton">Ask Question</button>
+    <button id="logoutButton">Logout</button>
   </header>
+  
+  <div id="questionsList" class="questions-list"></div>
 
-  <div id="questionsList" class="container">
-    <!-- Questions will be loaded here -->
-  </div>
+  <footer class="footer">
+    <p>Footer content here</p>
+  </footer>
 
   <div id="loading" class="loading">Loading...</div>
 
-  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <!-- Firebase and other scripts -->
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js"></script> <!-- JavaScript file for application logic -->
+  <script src="interactions.js"></script> <!-- JavaScript file for like and share functionalities -->
 </body>
 </html>
