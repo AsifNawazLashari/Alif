@@ -83,6 +83,11 @@ body {
   color: #666;
 }
 
+.read-more {
+  color: #007bff;
+  text-decoration: underline;
+}
+
 .loading {
   text-align: center;
   margin-top: 50px;
